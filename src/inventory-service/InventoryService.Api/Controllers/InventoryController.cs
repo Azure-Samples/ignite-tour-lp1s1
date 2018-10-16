@@ -12,17 +12,32 @@ namespace InventoryService.Api.Controllers
     [ApiController]
     public class InventoryController : ControllerBase
     {
-        private readonly InventoryData data;
+        private readonly InventoryManager inventoryManager;
 
-        public InventoryController(InventoryData data)
+        public InventoryController(InventoryManager inventoryManager)
         {
-            this.data = data;
+            this.inventoryManager = inventoryManager ?? throw new ArgumentNullException(nameof(inventoryManager));
+        }
+
+        [HttpGet]
+        public async Task<IEnumerable<InventoryItem>> GetAsync()
+        {
+            var skusParam = Request.Query["skus"].FirstOrDefault();
+            if (!string.IsNullOrEmpty(skusParam))
+            {
+                var skus = skusParam.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                return await inventoryManager.GetInventoryBySkusAsync(skus);
+            }
+            else
+            {
+                return new List<InventoryItem>();
+            }
         }
 
         [HttpGet("{sku}")]
         public Task<IEnumerable<InventoryItem>> GetAsync(string sku)
         {
-            return data.GetInventoryBySkusAsync(new string[] { sku });
+            return inventoryManager.GetInventoryBySkusAsync(new string[] { sku });
         }
 
         [HttpPost]

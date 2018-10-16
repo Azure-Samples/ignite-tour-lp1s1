@@ -33,7 +33,8 @@ namespace InventoryService.Api
                 options.UseSqlServer(Configuration.GetConnectionString("InventoryContext"));
             });
             services.AddCors();
-            services.AddScoped<InventoryData>();
+            services.AddScoped<InventoryManager>();
+            services.AddScoped<IInventoryData, SqlInventoryData>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
