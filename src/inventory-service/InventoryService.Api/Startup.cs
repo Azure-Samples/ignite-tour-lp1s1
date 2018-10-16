@@ -32,6 +32,7 @@ namespace InventoryService.Api
             {
                 options.UseSqlServer(Configuration.GetConnectionString("InventoryContext"));
             });
+            services.AddCors();
             services.AddScoped<InventoryData>();
         }
 
@@ -41,6 +42,7 @@ namespace InventoryService.Api
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseCors(builder => builder.AllowAnyOrigin());
             app.UseMvc();
         }
     }
