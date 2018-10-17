@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/InventoryService.Api.csproj"
+                "${workspaceFolder}/InventoryService.Api/InventoryService.Api.csproj"
             ],
             "problemMatcher": "$msCompile"
         }
