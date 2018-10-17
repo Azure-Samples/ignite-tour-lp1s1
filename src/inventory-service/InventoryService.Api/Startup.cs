@@ -15,9 +15,13 @@ namespace InventoryService.Api
 {
     public class Startup
     {
+        private readonly string signalRServiceConnectionString;
+        private readonly bool useSignalRService;
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            signalRServiceConnectionString = configuration["SignalRServiceConnectionString"];
+            useSignalRService = !string.IsNullOrEmpty(signalRServiceConnectionString);
         }
 
         public IConfiguration Configuration { get; }
@@ -31,9 +35,13 @@ namespace InventoryService.Api
                 options.UseSqlServer(Configuration.GetConnectionString("InventoryContext"));
             });
             services.AddCors();
-            services.AddSignalR()
+            var signalR = services.AddSignalR()
                 .AddJsonProtocol(builder =>
                     builder.PayloadSerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
+            if (useSignalRService)
+            {
+                signalR.AddAzureSignalR(signalRServiceConnectionString);
+            }
             services.AddScoped<InventoryManager>();
             services.AddScoped<IInventoryData, SqlInventoryData>();
             services.AddScoped<IInventoryNotificationService, SignalRInventoryNotificationService>();
@@ -52,10 +60,16 @@ namespace InventoryService.Api
                     PropertyNameHandling.CamelCase;
                 settings.GeneratorSettings.Title = "Inventory Service";
             });
-            app.UseSignalR(builder =>
+
+            if (useSignalRService)
             {
-                builder.MapHub<InventoryHub>("/signalr/inventory");
-            });
+                app.UseAzureSignalR(builder => builder.MapHub<InventoryHub>("/signalr/inventory"));
+            }
+            else
+            {
+                app.UseSignalR(builder => builder.MapHub<InventoryHub>("/signalr/inventory"));
+            }
+
             app.UseMvc();
             app.UseFileServer("/www");
         }
