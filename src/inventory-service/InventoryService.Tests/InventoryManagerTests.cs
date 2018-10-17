@@ -23,7 +23,8 @@ namespace InventoryService.Tests
                         new InventoryItem { Sku = "sku1" },
                         new InventoryItem { Sku = "sku2" }
                     });
-            var sut = new InventoryManager(dataMock.Object);
+            var notificationsMock = new Mock<IInventoryNotificationService>();
+            var sut = new InventoryManager(dataMock.Object, notificationsMock.Object);
 
             var actual = await sut.GetInventoryBySkus(input);
 
@@ -34,7 +35,7 @@ namespace InventoryService.Tests
         public async Task GetInventoryBySkus_ShouldAddMissingSkus()
         {
             var input = new [] { "sku1", "sku2", "sku3" };
-            var createdSkus = new List<string>();
+            var createdItems = new List<InventoryItem>();
             var dataMock = new Mock<IInventoryData>();
             dataMock
                 .Setup(m => m.GetInventoryBySkus(It.IsAny<IEnumerable<string>>()))
@@ -44,14 +45,23 @@ namespace InventoryService.Tests
                     });
             dataMock
                 .Setup(m => m.CreateInventory(It.IsAny<string>(), It.IsAny<int>()))
-                .Callback((string sku, int _) => createdSkus.Add(sku))
-                .ReturnsAsync((string sku, int _) => new InventoryItem { Sku = sku });
-            var sut = new InventoryManager(dataMock.Object);
+                .Callback((string sku, int qty) => createdItems.Add(new InventoryItem { Sku = sku, Quantity = qty }))
+                .ReturnsAsync((string sku, int qty) => new InventoryItem { Sku = sku, Quantity = qty });
+            var notificationsMock = new Mock<IInventoryNotificationService>();
+            notificationsMock
+                .Setup(m => m.NotifyInventoryChanged(It.IsAny<InventoryItem>()))
+                .Returns(Task.CompletedTask);
+            var sut = new InventoryManager(dataMock.Object, notificationsMock.Object);
 
             var actual = await sut.GetInventoryBySkus(input);
 
             Assert.Equal(input, actual.Select(i => i.Sku));
-            Assert.Equal(new [] { "sku2", "sku3" }, createdSkus);
+            Assert.Equal(new [] { "sku2", "sku3" }, createdItems.Select(i => i.Sku));
+            notificationsMock.Verify(m => m.NotifyInventoryChanged(
+                It.Is<InventoryItem>(i => i.Sku == "sku2" && i.Quantity == createdItems.First(c => c.Sku == "sku2").Quantity)));
+             notificationsMock.Verify(m => m.NotifyInventoryChanged(
+                It.Is<InventoryItem>(i => i.Sku == "sku3" && i.Quantity == createdItems.First(c => c.Sku == "sku3").Quantity)));
+           notificationsMock.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -60,13 +70,20 @@ namespace InventoryService.Tests
             var dataMock = new Mock<IInventoryData>();
             dataMock
                 .Setup(m => m.UpdateInventory(It.IsAny<string>(), It.IsAny<int>()))
-                .ReturnsAsync(new InventoryItem());
-            var sut = new InventoryManager(dataMock.Object);
+                .ReturnsAsync(new InventoryItem { Sku = "foo", Quantity = 10 });
+            var notificationsMock = new Mock<IInventoryNotificationService>();
+            notificationsMock
+                .Setup(m => m.NotifyInventoryChanged(It.IsAny<InventoryItem>()))
+                .Returns(Task.CompletedTask);
+            var sut = new InventoryManager(dataMock.Object, notificationsMock.Object);
 
-            await sut.IncrementInventory("foo");
+            var result = await sut.IncrementInventory("foo");
 
             dataMock.Verify(m => m.UpdateInventory("foo", 1), Times.Once);
             dataMock.VerifyNoOtherCalls();
+            notificationsMock.Verify(m => m.NotifyInventoryChanged(
+                It.Is<InventoryItem>(i => i.Sku == result.Sku && i.Quantity == result.Quantity)));
+            notificationsMock.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -76,12 +93,19 @@ namespace InventoryService.Tests
             dataMock
                 .Setup(m => m.UpdateInventory(It.IsAny<string>(), It.IsAny<int>()))
                 .ReturnsAsync(new InventoryItem());
-            var sut = new InventoryManager(dataMock.Object);
+            var notificationsMock = new Mock<IInventoryNotificationService>();
+            notificationsMock
+                .Setup(m => m.NotifyInventoryChanged(It.IsAny<InventoryItem>()))
+                .Returns(Task.CompletedTask);
+            var sut = new InventoryManager(dataMock.Object, notificationsMock.Object);
 
-            await sut.DecrementInventory("foo");
+            var result = await sut.DecrementInventory("foo");
 
             dataMock.Verify(m => m.UpdateInventory("foo", -1), Times.Once);
             dataMock.VerifyNoOtherCalls();
+            notificationsMock.Verify(m => m.NotifyInventoryChanged(
+                It.Is<InventoryItem>(i => i.Sku == result.Sku && i.Quantity == result.Quantity)));
+            notificationsMock.VerifyNoOtherCalls();
         }
     }
 }
