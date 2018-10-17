@@ -13,6 +13,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using InventoryService.Api.Database;
 using InventoryService.Api.Services;
+using NSwag.AspNetCore;
+using NJsonSchema;
 
 namespace InventoryService.Api
 {
@@ -28,6 +30,7 @@ namespace InventoryService.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddSwagger();
             services.AddDbContext<InventoryContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("InventoryContext"));
@@ -44,6 +47,12 @@ namespace InventoryService.Api
                 app.UseDeveloperExceptionPage();
             }
             app.UseCors(builder => builder.AllowAnyOrigin());
+            app.UseSwaggerUi3WithApiExplorer(settings =>
+            {
+                settings.GeneratorSettings.DefaultPropertyNameHandling =
+                    PropertyNameHandling.CamelCase;
+                settings.GeneratorSettings.Title = "Inventory Service";
+            });
             app.UseMvc();
         }
     }
