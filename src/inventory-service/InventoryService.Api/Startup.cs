@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using InventoryService.Api.Database;
 using InventoryService.Api.Services;
 using NSwag.AspNetCore;
 using NJsonSchema;
+using InventoryService.Api.Hubs;
+using Newtonsoft.Json.Serialization;
 
 namespace InventoryService.Api
 {
@@ -36,8 +31,12 @@ namespace InventoryService.Api
                 options.UseSqlServer(Configuration.GetConnectionString("InventoryContext"));
             });
             services.AddCors();
+            services.AddSignalR()
+                .AddJsonProtocol(builder =>
+                    builder.PayloadSerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
             services.AddScoped<InventoryManager>();
             services.AddScoped<IInventoryData, SqlInventoryData>();
+            services.AddScoped<IInventoryNotificationService, SignalRInventoryNotificationService>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -53,7 +52,12 @@ namespace InventoryService.Api
                     PropertyNameHandling.CamelCase;
                 settings.GeneratorSettings.Title = "Inventory Service";
             });
+            app.UseSignalR(builder =>
+            {
+                builder.MapHub<InventoryHub>("/signalr/inventory");
+            });
             app.UseMvc();
+            app.UseFileServer("/www");
         }
     }
 }

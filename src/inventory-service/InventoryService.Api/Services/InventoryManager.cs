@@ -10,10 +10,12 @@ namespace InventoryService.Api.Services
     public class InventoryManager
     {
         private readonly IInventoryData data;
+        private readonly IInventoryNotificationService notifications;
 
-        public InventoryManager(IInventoryData data)
+        public InventoryManager(IInventoryData data, IInventoryNotificationService notifications)
         {
             this.data = data;
+            this.notifications = notifications;
         }
 
         public async Task<IEnumerable<InventoryItem>> GetInventoryBySkus(IEnumerable<string> skus)
@@ -26,10 +28,12 @@ namespace InventoryService.Api.Services
                 if (results.Count != sanitizedSkus.Count())
                 {
                     var missingSkus = sanitizedSkus.Except(results.Select(i => i.Sku));
+                    var random = new Random();
                     foreach (var sku in missingSkus)
                     {
-                        var random = new Random();
-                        results.Add(await data.CreateInventory(sku, random.Next(1, 100)));
+                        var newItem = await data.CreateInventory(sku, random.Next(1, 100));
+                        await notifications.NotifyInventoryChanged(newItem);
+                        results.Add(newItem);
                     }
                 }
                 scope.Complete();
@@ -37,14 +41,18 @@ namespace InventoryService.Api.Services
             return results;
         }
 
-        public Task<InventoryItem> IncrementInventory(string sku)
+        public async Task<InventoryItem> IncrementInventory(string sku)
         {
-            return data.UpdateInventory(sku, quantityChanged: 1);
+            var updatedItem = await data.UpdateInventory(sku, quantityChanged: 1);
+            await notifications.NotifyInventoryChanged(updatedItem);
+            return updatedItem;
         }
 
-        public Task<InventoryItem> DecrementInventory(string sku)
-        {
-            return data.UpdateInventory(sku, quantityChanged: -1);
+        public async Task<InventoryItem> DecrementInventory(string sku)
+        {            
+            var updatedItem = await data.UpdateInventory(sku, quantityChanged: -1);
+            await notifications.NotifyInventoryChanged(updatedItem);
+            return updatedItem;
         }
 
         private List<string> SanitizedSkus(IEnumerable<string> skus)
