@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace InventoryService.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/inventory")]
     [ApiController]
     public class InventoryController : ControllerBase
     {
@@ -19,14 +19,20 @@ namespace InventoryService.Api.Controllers
             this.inventoryManager = inventoryManager ?? throw new ArgumentNullException(nameof(inventoryManager));
         }
 
+        /// <summary>
+        /// Retrieves one or more inventory items.
+        /// </summary>
+        /// <returns>
+        /// Inventory items
+        /// </returns>
+        /// <param name="skus">The list of comma-separated SKUs.</param>
         [HttpGet]
-        public async Task<IEnumerable<InventoryItem>> GetAsync()
+        public async Task<IEnumerable<InventoryItem>> GetAsync([FromQuery] string skus)
         {
-            var skusParam = Request.Query["skus"].FirstOrDefault();
-            if (!string.IsNullOrEmpty(skusParam))
+            if (!string.IsNullOrEmpty(skus))
             {
-                var skus = skusParam.Split(',', StringSplitOptions.RemoveEmptyEntries);
-                return await inventoryManager.GetInventoryBySkus(skus);
+                var splitSkus = skus.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                return await inventoryManager.GetInventoryBySkus(splitSkus);
             }
             else
             {
@@ -34,18 +40,39 @@ namespace InventoryService.Api.Controllers
             }
         }
 
+        /// <summary>
+        /// Retrieves an inventory item.
+        /// </summary>
+        /// <returns>
+        /// Inventory item
+        /// </returns>
+        /// <param name="sku">The product SKU.</param>
         [HttpGet("{sku}")]
-        public Task<IEnumerable<InventoryItem>> GetAsync(string sku)
+        public async Task<InventoryItem> GetSingleAsync(string sku)
         {
-            return inventoryManager.GetInventoryBySkus(new string[] { sku });
+            return (await inventoryManager.GetInventoryBySkus(new string[] { sku })).FirstOrDefault();
         }
 
+        /// <summary>
+        /// Increments an inventory item quantity by one.
+        /// </summary>
+        /// <returns>
+        /// The updated inventory item
+        /// </returns>
+        /// <param name="sku">The product SKU.</param>
         [HttpPost("{sku}/increment")]
         public Task<InventoryItem> IncrementAsync(string sku)
         {
             return inventoryManager.IncrementInventory(sku);
         }
 
+        /// <summary>
+        /// Decrements an inventory item quantity by one.
+        /// </summary>
+        /// <returns>
+        /// The updated inventory item
+        /// </returns>
+        /// <param name="sku">The product SKU.</param> 
         [HttpPost("{sku}/decrement")]
         public Task<InventoryItem> DecrementAsync(string sku)
         {
