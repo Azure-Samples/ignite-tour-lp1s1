@@ -51,6 +51,7 @@ namespace InventoryService.Api
             {
                 settings.GeneratorSettings.DefaultPropertyNameHandling =
                     PropertyNameHandling.CamelCase;
+                settings.GeneratorSettings.Title = "Inventory Service";
             });
             app.UseMvc();
         }
