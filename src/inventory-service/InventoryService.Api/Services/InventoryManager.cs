@@ -16,13 +16,13 @@ namespace InventoryService.Api.Services
             this.data = data;
         }
 
-        public async Task<IEnumerable<InventoryItem>> GetInventoryBySkusAsync(IEnumerable<string> skus)
+        public async Task<IEnumerable<InventoryItem>> GetInventoryBySkus(IEnumerable<string> skus)
         {
             var sanitizedSkus = SanitizedSkus(skus);
             List<InventoryItem> results;
             using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
-                results = (await data.GetInventoryBySkusAsync(sanitizedSkus)).ToList();
+                results = (await data.GetInventoryBySkus(sanitizedSkus)).ToList();
                 if (results.Count != sanitizedSkus.Count())
                 {
                     var missingSkus = sanitizedSkus.Except(results.Select(i => i.Sku));
@@ -35,6 +35,16 @@ namespace InventoryService.Api.Services
                 scope.Complete();
             }
             return results;
+        }
+
+        public Task<InventoryItem> IncrementInventory(string sku)
+        {
+            return data.UpdateInventory(sku, quantityChanged: 1);
+        }
+
+        public Task<InventoryItem> DecrementInventory(string sku)
+        {
+            return data.UpdateInventory(sku, quantityChanged: -1);
         }
 
         private List<string> SanitizedSkus(IEnumerable<string> skus)

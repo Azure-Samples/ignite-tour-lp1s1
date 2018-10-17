@@ -26,7 +26,7 @@ namespace InventoryService.Api.Controllers
             if (!string.IsNullOrEmpty(skusParam))
             {
                 var skus = skusParam.Split(',', StringSplitOptions.RemoveEmptyEntries);
-                return await inventoryManager.GetInventoryBySkusAsync(skus);
+                return await inventoryManager.GetInventoryBySkus(skus);
             }
             else
             {
@@ -37,12 +37,19 @@ namespace InventoryService.Api.Controllers
         [HttpGet("{sku}")]
         public Task<IEnumerable<InventoryItem>> GetAsync(string sku)
         {
-            return inventoryManager.GetInventoryBySkusAsync(new string[] { sku });
+            return inventoryManager.GetInventoryBySkus(new string[] { sku });
         }
 
-        [HttpPost]
-        public void Post([FromBody] string value)
+        [HttpPost("{sku}/increment")]
+        public Task<InventoryItem> IncrementAsync(string sku)
         {
+            return inventoryManager.IncrementInventory(sku);
+        }
+
+        [HttpPost("{sku}/decrement")]
+        public Task<InventoryItem> DecrementAsync(string sku)
+        {
+            return inventoryManager.DecrementInventory(sku);
         }
     }
 }
