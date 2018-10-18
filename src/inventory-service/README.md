@@ -1,6 +1,6 @@
 # Inventory Service
 
-This project needs an instance of SQL Server or SQL Database. Create a user secret in InventoryService.Api project and run the app:
+This project needs an instance of SQL Server, SQL Database, or PostgreSQL. Create a user secret in InventoryService.Api project and run the app:
 
 ```
 dotnet user-secrets set 'ConnectionStrings:InventoryContext' '<sqldb-connection-string>'
