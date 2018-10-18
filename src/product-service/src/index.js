@@ -31,7 +31,10 @@ const options = {
 server.route({
   method: "GET",
   path: "/api/products",
-  handler: require("./productsGet")
+  handler: require("./productsGet"),
+  options: {
+    cors: { origin: ["*"] }
+  }
 });
 
 server.route({

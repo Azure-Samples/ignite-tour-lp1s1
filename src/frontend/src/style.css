@@ -1,3 +1,5 @@
+@import "react-virtualized/styles.css";
+
 * {
   box-sizing: border-box;
 }
