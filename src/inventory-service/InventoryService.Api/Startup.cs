@@ -32,7 +32,16 @@ namespace InventoryService.Api
             services.AddSwagger();
             services.AddDbContext<InventoryContext>(options =>
             {
-                options.UseSqlServer(Configuration.GetConnectionString("InventoryContext"));
+                var connectionString = Configuration.GetConnectionString("InventoryContext");
+                var isPostgres = connectionString.Contains("postgres");
+                if (isPostgres)
+                {
+                    options.UseNpgsql(connectionString);
+                }
+                else
+                {
+                    options.UseSqlServer(connectionString);
+                }
             });
             services.AddCors();
             var signalR = services.AddSignalR()
