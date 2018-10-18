@@ -19,7 +19,6 @@
       const li = document.createElement('li')
       li.textContent = `[${(new Date()).toISOString()}] sku: ${item.sku} - qty: ${item.quantity}`
       items.append(li)
-      console.log(item)
     })
     connection.onclose(function () {
       console.log('disconnected')
