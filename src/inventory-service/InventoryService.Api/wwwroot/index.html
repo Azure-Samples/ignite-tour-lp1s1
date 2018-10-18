@@ -21,8 +21,21 @@
       items.append(li)
       console.log(item)
     })
+    connection.onclose(function () {
+      console.log('disconnected')
+      startConnection()
+    })
+    
+    startConnection()
 
-    connection.start()
+    function startConnection() {
+      console.log('Connecting...')
+      connection.start()
+        .catch(err => {
+          console.error(err)
+          setTimeout(startConnection, 2000)
+        })
+    }
   </script>
 </body>
 </html>
