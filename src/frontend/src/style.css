@@ -16,3 +16,21 @@ body {
   width: 100vw;
   height: 90vh;
 }
+
+@keyframes spin {
+  to {
+    transform: rotateZ(360deg);
+  }
+}
+
+.ReactVirtualized__Table__rowColumn {
+  text-align: center;
+}
+
+.ReactVirtualized__Table__rowColumn:empty::before {
+  content: "🛠";
+}
+
+.ReactVirtualized__Table__rowColumn:empty {
+  animation: 3s linear spin infinite;
+}
