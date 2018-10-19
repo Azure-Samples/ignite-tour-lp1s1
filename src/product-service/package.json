@@ -12,7 +12,7 @@
     "format:write": "npm run -s format -- --write",
     "lint": "eslint \"./src/**/*.js\"",
     "lint:write": "npm run -s lint -- --fix",
-    "populate:mongodb": "node scripts/genProducts"
+    "populate:mongodb": "node -r dotenv/config scripts/genProducts"
   },
   "author": "Brian Holt <brian.holt@microsoft.com>",
   "license": "Apache-2.0",
@@ -34,6 +34,8 @@
     "faker": "^4.1.0",
     "mongodb": "^3.1.8",
     "nodemon": "^1.18.4",
-    "prettier": "^1.14.3"
+    "pg": "^7.5.0",
+    "prettier": "^1.14.3",
+    "to-camel-case": "^1.0.0"
   }
 }
