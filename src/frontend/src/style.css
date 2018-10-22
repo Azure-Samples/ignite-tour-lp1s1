@@ -27,10 +27,128 @@ body {
   text-align: center;
 }
 
-.ReactVirtualized__Table__rowColumn:empty::before {
+.ReactVirtualized__Table__rowColumn:empty::before,
+.inventory:empty::before {
   content: "🛠";
 }
 
-.ReactVirtualized__Table__rowColumn:empty {
+.ReactVirtualized__Table__rowColumn:empty,
+.inventory:empty {
   animation: 3s linear spin infinite;
+}
+
+.row-even {
+  background-color: #fff;
+}
+
+.row-odd {
+  background-color: #c0cfc5;
+}
+
+.ReactVirtualized__Table__headerRow {
+  background-color: #4c6d58;
+  color: white;
+  text-align: center;
+}
+
+#modal-interior {
+  background-color: rgba(0, 0, 0, 0.9);
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#modal:empty {
+  display: none;
+}
+
+#modal-interior > div {
+  background-color: white;
+  max-width: 500px;
+  padding: 15px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.exit-button {
+  display: inline-block;
+  background-color: #3c556d;
+  color: white;
+  padding: 5px 30px;
+  font-size: 18px;
+  border-color: transparent;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.exit-button:hover {
+  background-color: #476480;
+}
+
+.exit-button:active {
+  background-color: #2f4254;
+}
+
+.mod-button {
+  transition: background-color 0.1 ease-out;
+  display: inline-block;
+  background-color: #ff4136;
+  color: white;
+  width: 60px;
+  height: 60px;
+  font-weight: bold;
+  font-size: 40px;
+  border-color: transparent;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 15px;
+}
+
+.minus:hover {
+  background-color: #f35d55;
+}
+
+.minus:active {
+  background-color: #b42e27;
+}
+
+.plus {
+  background-color: #2ecc40;
+  margin-right: 10px;
+}
+
+.plus:hover {
+  background-color: rgb(98, 235, 114);
+}
+
+.plus:active {
+  background-color: rgb(29, 124, 40);
+}
+
+.mod-button:disabled {
+  background-color: #aaa;
+  cursor: disabled;
+}
+
+.details-buttons {
+  transition: filter ease-in 0.1s;
+}
+
+.details-buttons.loading {
+  filter: blur(5px);
+  cursor: not-allowed;
+}
+
+.ReactVirtualized__Table__row {
+  cursor: pointer;
+}
+
+.details-info {
+  text-align: left;
 }
