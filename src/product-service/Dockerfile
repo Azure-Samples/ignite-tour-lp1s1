@@ -1,5 +1,6 @@
 FROM node:10.12.0-jessie
 
+COPY . .
 RUN npm install
 # requires the following env vars:
 #
