@@ -15,3 +15,27 @@ Optional: Use Azure SignalR Service by adding another secret:
 ```
 dotnet user-secrets set 'SignalRServiceConnectionString' '<azure-signalr-connection-string>'
 ```
+
+## Build the Docker Image
+
+Building the Docker image is pretty easy. If you have [Docker](https://docker.com) installed, run this:
+
+```console
+docker build -t inventory-service .
+```
+
+You can swap out `inventory-service` for your own image name.
+
+### Building with [ACR Builds](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-tutorial-quick-task)
+
+Or you can use [Azure Container Registry Builds](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-tutorial-quick-task) to do it:
+
+```console
+az acr build -r ignite-registry -t inventory-service .
+```
+
+A few notes about this:
+
+- This will cost you money
+- The `-r` argument has to be a registry you've created already
+- Like the previous command, you can swap out `inventory-service` for your own image name
