@@ -1,14 +1,48 @@
 const { MongoClient } = require("mongodb");
 const { Client: PgClient } = require("pg");
 const toCamelCase = require("to-camel-case");
+const { promisify } = require("util");
+const { readFile } = require("fs");
+const path = require("path");
+const csvParse = require("csv-parse");
 const dataMaker = require("./dataMaker");
+
+const rf = promisify(readFile);
+const parse = promisify(csvParse);
 
 const url = process.env.CONNECTION_STRING || "mongodb://localhost:27017";
 const dbName = process.env.DB_NAME || "tailwind";
 const collectionName = process.env.COLLECTION_NAME || "inventory";
 const numberOfItems = process.env.ITEMS_AMOUNT || 10000;
+const imageSize = process.env.IMAGE_SIZE || 250;
+
+const processImage = image => ({
+  id: image.id,
+  caption: image.name,
+  url: `https://ttcdn.blob.core.windows.net/products/${imageSize}/${
+    image.id
+  }.jpg`
+});
+
+const randomNum = num => Math.floor(num * Math.random());
+const getRandomImagesArray = (images = [], max = 3) =>
+  Array.from({ length: 1 + randomNum(max) })
+    .map(() => images[randomNum(images.length)])
+    .reduce((acc, item) => {
+      if (!acc.includes(item)) {
+        acc.push(item);
+      }
+      return acc;
+    }, [])
+    .map(processImage);
 
 async function insert() {
+  const csvData = await rf(path.resolve(__dirname, "./images.csv"));
+  const images = await parse(csvData, {
+    columns: true,
+    cast: true
+  });
+
   let items = [];
   if (process.env.PG_CONNECTION_STRING) {
     console.log("PG connection string detected, reading from Postgres");
@@ -46,10 +80,13 @@ async function insert() {
     items = existing.rows;
 
     items = items.map(item =>
-      Object.keys(item).reduce((acc, key) => {
-        acc[toCamelCase(key)] = item[key];
-        return acc;
-      }, {})
+      Object.keys(item).reduce(
+        (acc, key) => {
+          acc[toCamelCase(key)] = item[key];
+          return acc;
+        },
+        { images: getRandomImagesArray(images) }
+      )
     );
 
     await pg.end();
@@ -62,7 +99,12 @@ async function insert() {
       items.length} items with randomly generated data`
   );
 
-  items = items.concat(dataMaker(items.length + 1, numberOfItems));
+  items = items.concat(
+    dataMaker(items.length + 1, numberOfItems).map(obj => {
+      obj.images = getRandomImagesArray(images);
+      return obj;
+    })
+  );
 
   console.log("starting MongoDB");
   console.log(

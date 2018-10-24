@@ -51,7 +51,8 @@ class ProductDetails extends React.Component {
       status,
       location,
       productType,
-      digital
+      digital,
+      images
     } = this.props;
     const { inventoryMod, loading } = this.state;
     return (
@@ -87,6 +88,11 @@ class ProductDetails extends React.Component {
             </div>
           </div>
         </div>
+        <div className="details-images">
+          {images.map(({ url, caption, id }) => (
+            <img className="details-image" src={url} alt={caption} key={id} />
+          ))}
+        </div>
         <div className="details-info">
           <ul>
             <li>
@@ -102,7 +108,7 @@ class ProductDetails extends React.Component {
               <strong>Dimensions:</strong> {dimensions}
             </li>
             <li>
-              <strong>Weight (lbs):</strong> {weightInPounds}
+              <strong>Weight:</strong> {weightInPounds} lbs
             </li>
             <li>
               <strong>Reorder Amount:</strong> {reorderAmount}

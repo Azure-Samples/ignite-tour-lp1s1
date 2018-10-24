@@ -73,8 +73,8 @@ class ProductTable extends React.Component {
         <AutoSizer>
           {({ height, width }) => (
             <Table
-              width={height}
-              height={width}
+              width={width}
+              height={height}
               headerHeight={60}
               rowHeight={60}
               rowCount={this.state.rows.length}
@@ -84,7 +84,7 @@ class ProductTable extends React.Component {
               headerClassName="row-header"
               onRowClick={this.handleRowClick}
             >
-              <Column width={80} label="ID" dataKey="id" />
+              <Column width={100} label="ID" dataKey="id" />
               <Column width={300} label="Name" dataKey="name" />
               <Column width={300} label="SKU" dataKey="sku" />
               <Column width={100} label="Price" dataKey="price" />
