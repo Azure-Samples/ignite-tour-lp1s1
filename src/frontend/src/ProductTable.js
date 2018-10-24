@@ -20,7 +20,7 @@ class ProductTable extends React.Component {
     this.closeModal = this.closeModal.bind(this);
   }
   componentDidMount() {
-    fetch("http://localhost:8000/api/products")
+    fetch(`${process.env.PRODUCT_SERVICE_BASE_URL}/api/products`)
       .then(data => data.json())
       .then(({ items }) => {
         this.setState({ rows: items });
@@ -37,7 +37,9 @@ class ProductTable extends React.Component {
     const nums = Array.from({ length: this.state.stop - this.state.start })
       .map((_, index) => index + this.state.start + 1)
       .join(",");
-    fetch(`http://localhost:5000/api/inventory?skus=${nums}`)
+    fetch(
+      `${process.env.INVENTORY_SERVICE_BASE_URL}/api/inventory?skus=${nums}`
+    )
       .then(data => data.json())
       .then(skus => {
         for (let i = 0; i < skus.length; i++) {

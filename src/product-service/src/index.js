@@ -2,8 +2,8 @@ const Hapi = require("hapi");
 
 // Create a server with a host and port
 const server = Hapi.server({
-  host: "localhost",
-  port: 8000
+  host: process.env.HOSTNAME || "localhost",
+  port: process.env.PORT || 8000
 });
 
 const options = {
@@ -71,12 +71,12 @@ async function start() {
       "2c8997e97ed44a50ae0bd117b0d222f9"
     );
     connectionString = cosmosString;
-  } else if (process.env.CONNECTION_STRING) {
-    connectionString = `${process.env.CONNECTION_STRING}/${
+  } else if (process.env.COSMOSDB_OR_MONGODB_CONNECTION_STRING) {
+    connectionString = `${process.env.COSMOSDB_OR_MONGODB_CONNECTION_STRING}/${
       process.env.DB_NAME
     }`;
   } else {
-    // undefined connection string defaults to local MongoDB with test db
+    connectionString = "mongodb://localhost:27017/tailwind";
   }
 
   await server.register({

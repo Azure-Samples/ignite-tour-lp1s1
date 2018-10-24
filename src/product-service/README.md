@@ -1,0 +1,47 @@
+# Tailwind Traders Product Service
+
+This project requires Node.js 8+ as well CosmosDB or MongoDB running somewhere.
+
+1. Create a file called `.env` in `<project>/src/frontend/`
+1. Put these variables in it:
+   - `COSMOSDB_OR_MONGODB_CONNECTION_STRING` — CosmosDB or MongoDB URL
+   - `DB_NAME` — Name of DB in CosmosDB or MongoDB. default `tailwind`
+   - `COLLECTION_NAME` — Name of collection in db. default `inventory`
+   - `ITEMS_AMOUNT` — If running the `populate:mongodb` script, how many total items to fill the DB with. default `10000`
+   - `IMAGE_SIZE` — If running the `populate:mongodb` script, what size of images to use. default: `250`
+   - `PG_CONNECTION_STRING` — If running the `populate:mongodb` script, an optional param to draw data from a Postgres database first before filling the rest of the MongoDB/CosmosDB instance with random data. optional
+   - `PORT` — What port to start the service on. default `8000`
+   - `HOSTNAME` — What hostname the server is hosted on. default: `localhost`
+
+**OR**
+
+TODO, almost ready to go, for now use above steps and ignore Key Vault steps
+
+1. In your `.env` file, put the following variables:
+   - `KEYVAULT_URI` — URI of your Azure Key Vault
+   - `KEYVAULT_ID` — ID of your Azure Key Vault
+   - `KEYVAULT_SECRET` — ID of your Azure Key Vault
+   - All of the above keys you wish load from Azure Key Vault, replacing `_` with `-` in Key Vault (Key Vault doesn't support underscores.)
+
+## To Populate ComsosDB or MongoDB with fake data
+
+1. `cd` to this directory, `<project>/src/product-service/`
+1. `npm install`
+1. If you need to pull from a Postgres DB, make sure you have a connection string for it in your `.env`
+1. Drop the previous collection if you're re-using a collection
+1. Run `npm run populate:mongodb`
+
+## To Develop
+
+1. `cd` to this directory, `<project>/src/product-service/`
+1. `npm install`
+1. `npm run dev`
+1. Project will be running on host and port you specified, defaults to http://localhost:8000
+1. Adhere to the Prettier and ESLint rules before checking in
+
+## To Run in Production
+
+1. `cd` to this directory, `<project>/src/frontend/`
+1. `npm install`
+1. `npm start`
+1. Project will be running on host and port you specified
