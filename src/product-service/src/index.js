@@ -6,7 +6,7 @@ const server = Hapi.server({
   port: process.env.PORT || 8000,
   routes: {
     cors: {
-      origin: [process.env.FRONTEND || "*"]
+      origin: [process.env.CORS || "*"]
     }
   }
 });

@@ -12,6 +12,7 @@ This project requires Node.js 8+ as well CosmosDB or MongoDB running somewhere.
    - `PG_CONNECTION_STRING` — If running the `populate:mongodb` script, an optional param to draw data from a Postgres database first before filling the rest of the MongoDB/CosmosDB instance with random data. optional
    - `PORT` — What port to start the service on. default `8000`
    - `HOSTNAME` — What hostname the server is hosted on. default: `localhost`
+   - `CORS` - Which URL would you like to restrict CORS to? By default it is set to '\*'.
 
 **OR**
 
