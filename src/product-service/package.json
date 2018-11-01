@@ -4,7 +4,7 @@
   "description": "inventory tracking app",
   "main": "index.js",
   "scripts": {
-    "start": "node -r dotenv/config src",
+    "start": "node src",
     "dev": "nodemon -r dotenv/config src",
     "test": "jest",
     "format": "prettier \"./src/**/*.{js,css}\"",
