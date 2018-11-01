@@ -10,6 +10,7 @@ using NSwag.AspNetCore;
 using NJsonSchema;
 using InventoryService.Api.Hubs;
 using Newtonsoft.Json.Serialization;
+using System.Data.SqlClient;
 
 namespace InventoryService.Api
 {
@@ -54,6 +55,16 @@ namespace InventoryService.Api
             services.AddScoped<InventoryManager>();
             services.AddScoped<IInventoryData, SqlInventoryData>();
             services.AddScoped<IInventoryNotificationService, SignalRInventoryNotificationService>();
+            services.AddScoped<SqlConnection>(_ =>
+            {
+                var connectionString = Configuration.GetConnectionString("InventoryContextReadOnly");
+                if (string.IsNullOrEmpty(connectionString))
+                {
+                    connectionString = Configuration.GetConnectionString("InventoryContext");
+                }
+                return new SqlConnection(connectionString);
+            });
+            services.AddScoped<BadSqlInventoryData>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
