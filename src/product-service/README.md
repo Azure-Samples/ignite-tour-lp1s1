@@ -45,3 +45,51 @@ TODO, almost ready to go, for now use above steps and ignore Key Vault steps
 1. `npm install`
 1. `npm start`
 1. Project will be running on host and port you specified
+
+## To Deploy To Azure
+
+### From Azure CLI
+
+1. Create a new Resource Group with a data center location. You can substitute "westus" here for any other data center location.
+
+   For a list of locations, run `az account list-locations`.
+
+   ```
+   az group create -n {Your Resource Group Name} -l westus
+   ```
+
+1. Create a new Service Plan. Select the S1 tier. This tier performs faster for demos. Also make sure you specify that you want a Linux server.
+   ```
+   az appservice plan create -n {Your Service Plan Name} --sku S1 --is-linux -g {Your Resource Group Name}
+   ```
+1. Create a new App Service site to hose the Product Service API. Specify a Node version to use as well. At the time of this writing, the current LTS version of Node in Azure is 8.11.
+
+   For a complete list of supported Node versions, run `az webapp list-runtimes`.
+
+   ```
+   az webapp create -n {Your App Name} -p {Your Service Plan Name} -g {Your Resource Group Name} --runtime 'node|8.11'
+   ```
+
+1. Zip up all of the project files, excluding the `node_modules` folder. An `npm install` will be run by Azure after the zip is deployed. Make sure you are in the project directory when you run this.
+
+   ```
+   zip -r Deployment . -x "node_modules/**/*"
+   ```
+
+1. Deploy the zip file to Azure
+
+   ```
+   az webapp deployment source config-zip -g {Your Resource Group Name} -name {Your App Name} --src Deployment.zip
+   ```
+
+1. Add an application setting that points to your Products Cosmos DB database instance.
+
+   ```
+   az webapp config appsettings set -n {Your App Name} --settings "COSMOSDB_OR_MONGODB_CONNECTION_STRING={Your Cosmos DB Connection String}" -g {Your Resource Group}
+   ```
+
+1. Open the app in a browser...
+   ```
+   az webapp browse -n {Your App Name} -g {Your Resource Group Name}
+   ```
+   ...and then navigate to `api/products` to see some data.
