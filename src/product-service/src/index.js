@@ -55,7 +55,7 @@ async function start() {
     plugin: require("good"),
     options
   });
-
+  
   let connectionString;
   if (process.env.KEYVAULT_URI) {
     await server.register({
@@ -72,9 +72,11 @@ async function start() {
     );
     connectionString = cosmosString;
   } else if (process.env.COSMOSDB_OR_MONGODB_CONNECTION_STRING) {
-    connectionString = `${process.env.COSMOSDB_OR_MONGODB_CONNECTION_STRING}/${
-      process.env.DB_NAME
-    }`;
+    const envConnectionString = process.env.COSMOSDB_OR_MONGODB_CONNECTION_STRING;
+    const connectionStringParts = envConnectionString.split(/\/?\?/);
+    const dbName = process.env.DB_NAME || "tailwind";
+    connectionString = `${connectionStringParts[0]}/${dbName}` +
+      (connectionStringParts.length > 1 ? `?${connectionStringParts[1]}` : "");
   } else {
     connectionString = "mongodb://localhost:27017/tailwind";
   }

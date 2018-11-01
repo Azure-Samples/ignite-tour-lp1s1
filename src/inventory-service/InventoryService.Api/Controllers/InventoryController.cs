@@ -41,6 +41,27 @@ namespace InventoryService.Api.Controllers
         }
 
         /// <summary>
+        /// Retrieves an inventory item (susceptible to SQL injection).
+        /// </summary>
+        /// <returns>
+        /// Inventory item
+        /// </returns>
+        /// <param name="sku">The product SKU.</param>
+        [HttpGet("bad/{sku}")]
+        public async Task<IActionResult> GetSingleBadAsync(string sku)
+        {
+            var result = await inventoryManager.GetInventoryBySkuBad(sku);
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        /// <summary>
         /// Retrieves an inventory item.
         /// </summary>
         /// <returns>

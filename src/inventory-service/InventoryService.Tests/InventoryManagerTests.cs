@@ -24,7 +24,7 @@ namespace InventoryService.Tests
                         new InventoryItem { Sku = "sku2" }
                     });
             var notificationsMock = new Mock<IInventoryNotificationService>();
-            var sut = new InventoryManager(dataMock.Object, notificationsMock.Object);
+            var sut = new InventoryManager(dataMock.Object, null, notificationsMock.Object);
 
             var actual = await sut.GetInventoryBySkus(input);
 
@@ -51,7 +51,7 @@ namespace InventoryService.Tests
             notificationsMock
                 .Setup(m => m.NotifyInventoryChanged(It.IsAny<InventoryItem>()))
                 .Returns(Task.CompletedTask);
-            var sut = new InventoryManager(dataMock.Object, notificationsMock.Object);
+            var sut = new InventoryManager(dataMock.Object, null, notificationsMock.Object);
 
             var actual = await sut.GetInventoryBySkus(input);
 
@@ -75,7 +75,7 @@ namespace InventoryService.Tests
             notificationsMock
                 .Setup(m => m.NotifyInventoryChanged(It.IsAny<InventoryItem>()))
                 .Returns(Task.CompletedTask);
-            var sut = new InventoryManager(dataMock.Object, notificationsMock.Object);
+            var sut = new InventoryManager(dataMock.Object, null, notificationsMock.Object);
 
             var result = await sut.IncrementInventory("foo");
 
@@ -97,7 +97,7 @@ namespace InventoryService.Tests
             notificationsMock
                 .Setup(m => m.NotifyInventoryChanged(It.IsAny<InventoryItem>()))
                 .Returns(Task.CompletedTask);
-            var sut = new InventoryManager(dataMock.Object, notificationsMock.Object);
+            var sut = new InventoryManager(dataMock.Object, null, notificationsMock.Object);
 
             var result = await sut.DecrementInventory("foo");
 

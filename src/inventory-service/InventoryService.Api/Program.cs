@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using InventoryService.Api.Database;
+using InventoryService.Api.Models;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,16 @@ namespace InventoryService.Api
             {
                 var context = scope.ServiceProvider.GetRequiredService<InventoryContext>();
                 context.Database.Migrate();
+                // make sure there is a user inserted (for SQL injection demo)
+                if (context.SecretUsers.Count() == 0)
+                {
+                    context.SecretUsers.Add(new SecretUser
+                    {
+                        Username = "administrator",
+                        Password = "MySuperSecr3tPassword!"
+                    });
+                    context.SaveChanges();
+                }
             }
             host.Run();
         }
