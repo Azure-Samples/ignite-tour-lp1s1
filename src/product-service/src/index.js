@@ -71,19 +71,14 @@ async function start() {
         uri: process.env.KEYVAULT_URI
       }
     });
-    const { value: cosmosString } = await server.keyvault.get(
-      "Cosmos-Connection-String",
-      "2c8997e97ed44a50ae0bd117b0d222f9"
-    );
-    connectionString = cosmosString;
-  } else if (process.env.COSMOSDB_OR_MONGODB_CONNECTION_STRING) {
+
+    connectionString = server.keyvault.secrets["DB-CONNECTION-STRING"];
+  } else if (process.env.DB_CONNECTION_STRING) {
     const envConnectionString =
       process.env.COSMOSDB_OR_MONGODB_CONNECTION_STRING;
     const connectionStringParts = envConnectionString.split(/\/?\?/);
     const dbName = process.env.DB_NAME || "tailwind";
-    connectionString =
-      `${connectionStringParts[0]}/${dbName}` +
-      (connectionStringParts.length > 1 ? `?${connectionStringParts[1]}` : "");
+    connectionString = `${process.env.DB_CONNECTION_STRING}`;
   } else {
     connectionString = "mongodb://localhost:27017/tailwind";
   }

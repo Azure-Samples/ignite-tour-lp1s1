@@ -10,7 +10,8 @@ const dataMaker = require("./dataMaker");
 const rf = promisify(readFile);
 const parse = promisify(csvParse);
 
-const url = process.env.CONNECTION_STRING || "mongodb://localhost:27017";
+const url =
+  process.env.DB_CONNECTION_STRING || "mongodb://localhost:27017/tailwind";
 const dbName = process.env.DB_NAME || "tailwind";
 const collectionName = process.env.COLLECTION_NAME || "inventory";
 const numberOfItems = process.env.ITEMS_AMOUNT || 10000;
