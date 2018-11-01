@@ -15,12 +15,18 @@ namespace InventoryService.Api.Services
 
         public async Task<InventoryItem> GetInventoryBySku(string sku)
         {
-            var sql = $"SELECT Sku, Quantity FROM Inventory WHERE Sku = '{sku}'";
             InventoryItem result = null;
-
             await connection.OpenAsync();
+
+            var sql = $"SELECT Sku, Quantity FROM Inventory WHERE Sku = '{sku}'";
             using (var command = new SqlCommand(sql, connection))
             {
+                
+            // var sql = $"SELECT Sku, Quantity FROM Inventory WHERE Sku = @Sku";
+            // using (var command = new SqlCommand(sql, connection))
+            // {
+            //     command.Parameters.AddWithValue("@Sku", sku);
+
                 var reader = await command.ExecuteReaderAsync();
                 if (await reader.ReadAsync())
                 {
