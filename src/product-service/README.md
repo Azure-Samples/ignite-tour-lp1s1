@@ -4,26 +4,24 @@ This project requires Node.js 8+ as well CosmosDB or MongoDB running somewhere.
 
 1. Create a file called `.env` in `<project>/src/frontend/`
 1. Put these variables in it:
-   - `COSMOSDB_OR_MONGODB_CONNECTION_STRING` — CosmosDB or MongoDB URL
+   - `DB_CONNECTION_STRING` — CosmosDB or MongoDB URL – make sure it has the db name in it. If you're pulling from CosmosDB, make sure to add a `/tailwind` (or whatever you called it in `DB_NAME`) after the port but before the query string
    - `DB_NAME` — Name of DB in CosmosDB or MongoDB. default `tailwind`
    - `COLLECTION_NAME` — Name of collection in db. default `inventory`
    - `ITEMS_AMOUNT` — If running the `populate:mongodb` script, how many total items to fill the DB with. default `10000`
    - `IMAGE_SIZE` — If running the `populate:mongodb` script, what size of images to use. default: `250`
    - `PG_CONNECTION_STRING` — If running the `populate:mongodb` script, an optional param to draw data from a Postgres database first before filling the rest of the MongoDB/CosmosDB instance with random data. optional
-   - `PORT` — What port to start the service on. default `8000`
-   - `HOSTNAME` — What hostname the server is hosted on. default: `localhost`
+   - `PORT` — What port to start the service on. default `8000` – don't add this to your .env unless you _definitely_ need it
+   - `HOSTNAME` — What hostname the server is hosted on. default: `localhost` – don't add this to your .env unless you _definitely_ need it
    - `CORS` - Which URL would you like to restrict CORS to? By default it is set to '\*'.
 
 **OR**
-
-TODO, almost ready to go, for now use above steps and ignore Key Vault steps
 
 1. In your `.env` file, put the following variables:
    - `KEYVAULT_URI` — URI of your Azure Key Vault
    - `KEYVAULT_ID` — ID of your Azure Key Vault
    - `KEYVAULT_SECRET` — ID of your Azure Key Vault
-   - All of the above keys you wish load from Azure Key Vault, replacing `_` with `-` in Key Vault (Key Vault doesn't support underscores.)
-
+   - All of the above keys you have loaded in the Key Vault will be available in the app
+   
 ## To Populate ComsosDB or MongoDB with fake data
 
 1. `cd` to this directory, `<project>/src/product-service/`
