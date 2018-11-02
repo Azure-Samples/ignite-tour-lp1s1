@@ -30,12 +30,13 @@ namespace InventoryService.Api.Services
                 .ConfigureAwait(false);
         }
 
-        public async Task<InventoryItem> CreateInventory(string sku, int quantity)
+        public async Task<InventoryItem> CreateInventory(string sku, int quantity, DateTime modified)
         {
             var item = new InventoryItem
             {
                 Sku = sku,
-                Quantity = quantity
+                Quantity = quantity,
+                Modified = modified
             };
             context.Inventory.Add(item);
             await context.SaveChangesAsync();
@@ -50,6 +51,7 @@ namespace InventoryService.Api.Services
                 if (item != null)
                 {
                     item.Quantity += quantityChanged;
+					item.Modified = DateTime.Now;
                     await context.SaveChangesAsync();
                     scope.Complete();
                     return item;

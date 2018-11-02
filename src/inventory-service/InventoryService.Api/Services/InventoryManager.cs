@@ -38,7 +38,7 @@ namespace InventoryService.Api.Services
                     var random = new Random();
                     foreach (var sku in missingSkus)
                     {
-                        var newItem = await data.CreateInventory(sku, random.Next(1, 100));
+                        var newItem = await data.CreateInventory(sku, random.Next(1, 100), DateTime.Now);
                         await notifications.NotifyInventoryChanged(newItem);
                         results.Add(newItem);
                     }
