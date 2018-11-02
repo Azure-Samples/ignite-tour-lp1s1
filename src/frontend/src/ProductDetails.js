@@ -20,7 +20,7 @@ class ProductDetails extends React.Component {
   mod(increment) {
     this.setState({ loading: true });
     fetch(
-      `http://localhost:5000/api/inventory/${this.props.id}/${
+      `${process.env.INVENTORY_SERVICE_BASE_URL}/api/inventory/${this.props.id}/${
         increment ? "increment" : "decrement"
       }`,
       {
