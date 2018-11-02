@@ -64,3 +64,4 @@ typings/
 .env.development
 .cache/
 dist/
+.vscode

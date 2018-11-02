@@ -63,6 +63,8 @@ async function start() {
 
   let connectionString;
   if (process.env.KEYVAULT_URI) {
+    server.log("secrets", "pulling secrets from Azure Key Vault");
+
     await server.register({
       plugin: require("./hapi-azure-key-vault"),
       options: {
@@ -74,12 +76,10 @@ async function start() {
 
     connectionString = server.keyvault.secrets["DB-CONNECTION-STRING"];
   } else if (process.env.DB_CONNECTION_STRING) {
-    const envConnectionString =
-      process.env.COSMOSDB_OR_MONGODB_CONNECTION_STRING;
-    const connectionStringParts = envConnectionString.split(/\/?\?/);
-    const dbName = process.env.DB_NAME || "tailwind";
+    server.log("secrets", "pulling secrets from process.env");
     connectionString = `${process.env.DB_CONNECTION_STRING}`;
   } else {
+    server.log("secrets", "pulling secrets from default");
     connectionString = "mongodb://localhost:27017/tailwind";
   }
 
