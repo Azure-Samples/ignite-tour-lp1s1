@@ -10,57 +10,56 @@ using Microsoft.Extensions.Logging;
 
 namespace InventoryService.Api.Services
 {
-  public class SqlInventoryData : IInventoryData
-  {
-    private readonly InventoryContext context;
-    private readonly ILogger<SqlInventoryData> logger;
-
-    public SqlInventoryData(InventoryContext context, ILogger<SqlInventoryData> logger)
+    public class SqlInventoryData : IInventoryData
     {
-      this.context = context;
-      this.logger = logger;
-    }
+        private readonly InventoryContext context;
+        private readonly ILogger<SqlInventoryData> logger;
 
-    public async Task<IEnumerable<InventoryItem>> GetInventoryBySkus(IEnumerable<string> skus)
-    {
-      return await context
-          .Inventory
-          .Where(i => skus.Contains(i.Sku))
-          .ToListAsync()
-          .ConfigureAwait(false);
-    }
-
-    public async Task<InventoryItem> CreateInventory(string sku, int quantity, DateTime modified)
-    {
-      var item = new InventoryItem
-      {
-        Sku = sku,
-        Quantity = quantity,
-        Modified = modified
-      };
-      context.Inventory.Add(item);
-      await context.SaveChangesAsync();
-      return item;
-    }
-
-    public async Task<InventoryItem> UpdateInventory(string sku, int quantityChanged)
-    {
-      using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
-      {
-        var item = await context.Inventory.FindAsync(sku);
-        if (item != null)
+        public SqlInventoryData(InventoryContext context, ILogger<SqlInventoryData> logger)
         {
-          item.Quantity += quantityChanged;
-          await context.SaveChangesAsync();
-          scope.Complete();
-          return item;
+            this.context = context;
+            this.logger = logger;
         }
-        else
+
+        public async Task<IEnumerable<InventoryItem>> GetInventoryBySkus(IEnumerable<string> skus)
         {
-          logger.LogError("Error updating sku. Sku '{sku}' not found.", sku);
-          throw new ArgumentException("Sku not found");
+            return await context
+                .Inventory
+                .Where(i => skus.Contains(i.Sku))
+                .ToListAsync()
+                .ConfigureAwait(false);
         }
-      }
+
+        public async Task<InventoryItem> CreateInventory(string sku, int quantity)
+        {
+            var item = new InventoryItem
+            {
+                Sku = sku,
+                Quantity = quantity
+            };
+            context.Inventory.Add(item);
+            await context.SaveChangesAsync();
+            return item;
+        }
+
+        public async Task<InventoryItem> UpdateInventory(string sku, int quantityChanged)
+        {
+            using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            {
+                var item = await context.Inventory.FindAsync(sku);
+                if (item != null)
+                {
+                    item.Quantity += quantityChanged;
+                    await context.SaveChangesAsync();
+                    scope.Complete();
+                    return item;
+                }
+                else
+                {
+                    logger.LogError("Error updating sku. Sku '{sku}' not found.", sku);
+                    throw new ArgumentException("Sku not found");
+                }
+            }
+        }
     }
-  }
 }
