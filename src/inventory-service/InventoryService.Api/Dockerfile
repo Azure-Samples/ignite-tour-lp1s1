@@ -6,16 +6,14 @@ COPY *.csproj .
 RUN dotnet restore
 
 COPY . .
-RUN dotnet publish --output /app/ --configuration Release
-RUN sed -n 's:.*<AssemblyName>\(.*\)</AssemblyName>.*:\1:p' *.csproj > __assemblyname
-RUN if [ ! -s __assemblyname ]; then filename=$(ls *.csproj); echo ${filename%.*} > __assemblyname; fi
+RUN dotnet publish --output /app/ --configuration Release --self-contained -r alpine-x64
 
 # Stage 2
-FROM microsoft/dotnet:2.1-aspnetcore-runtime-alpine
+FROM microsoft/dotnet:2.1-runtime-deps-alpine
 WORKDIR /app
 COPY --from=builder /app .
 
 ENV PORT 80
 EXPOSE 80
 
-ENTRYPOINT dotnet $(cat /app/__assemblyname).dll
+ENTRYPOINT ./InventoryService.Api
