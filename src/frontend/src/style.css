@@ -201,3 +201,15 @@ nav {
     display: none;
   }
 }
+
+.timings {
+  position: fixed;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  bottom: 0;
+  background-color: #4c6d58;
+  color: white;
+  font-weight: bold;
+}

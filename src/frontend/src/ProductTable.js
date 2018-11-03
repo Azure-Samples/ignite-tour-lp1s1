@@ -35,18 +35,23 @@ class ProductTable extends React.Component {
 
     this.lastRequestedPage = page;
 
+    const start = Date.now();
     fetch(
       `${
         process.env.PRODUCT_SERVICE_BASE_URL
       }/api/products?pageSize=500&page=${page}`
     )
-      .then(data => data.json())
+      .then(data => {
+        this.props.setTiming(Date.now() - start);
+        return data.json();
+      })
       .then(({ items, size }) => {
         this.setState({ rows: this.state.rows.concat(items), totalSize: size });
         this.interval = Date.now() + 2000;
 
         requestAnimationFrame(this.getInventory);
-      });
+      })
+      .catch(console.error);
   }
   getInventory() {
     if (this.interval > Date.now()) {
@@ -54,19 +59,20 @@ class ProductTable extends React.Component {
       return;
     }
 
-    // if (this.state.rows.length - this.state.stop <= 250) {
-    //   this.fetchRows(Math.ceil(this.state.rows.length / 500));
-    // }
-
     const nums = Array.from({ length: this.state.stop - this.state.start })
       .map((_, index) => index + this.state.start + 1)
       .join(",");
+    const start = Date.now();
     fetch(
       `${process.env.INVENTORY_SERVICE_BASE_URL}/api/inventory?skus=${nums}`
     )
-      .then(data => data.json())
+      .then(data => {
+        this.props.setTiming(null, Date.now() - start);
+        return data.json();
+      })
       .then(skus => {
         for (let i = 0; i < skus.length; i++) {
+          this.props.setTiming(Date.now() - start);
           // cloning a list of 100,000 is bad
           this.state.rows[+skus[i].sku - 1].inventory = skus[i].quantity; // eslint-disable-line
         }
@@ -74,7 +80,8 @@ class ProductTable extends React.Component {
         this.forceUpdate();
         this.interval = Date.now() + 5000;
         requestAnimationFrame(this.getInventory);
-      }, console.error);
+      })
+      .catch(console.error);
   }
   modRowsShowing({ overscanStartIndex, overscanStopIndex }) {
     this.setState({
