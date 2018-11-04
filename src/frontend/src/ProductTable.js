@@ -59,17 +59,19 @@ class ProductTable extends React.Component {
     // }
 
     const nums = Array.from({ length: this.state.stop - this.state.start })
-      .map((_, index) => index + this.state.start + 1)
+      .map((_, index) => this.state.rows[index + this.state.start].id)
       .join(",");
     fetch(
       `${process.env.INVENTORY_SERVICE_BASE_URL}/api/inventory?skus=${nums}`
     )
       .then(data => data.json())
       .then(skus => {
-        for (let i = 0; i < skus.length; i++) {
-          // cloning a list of 100,000 is bad
-          this.state.rows[+skus[i].sku - 1].inventory = skus[i].quantity; // eslint-disable-line
-        }
+        skus.forEach(sku => {
+          const item = this.state.rows.find(p => p.id == sku.sku);
+          if (item) {
+            item.inventory = sku.quantity;
+          }
+        });
 
         this.forceUpdate();
         this.interval = Date.now() + 5000;
