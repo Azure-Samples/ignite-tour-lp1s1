@@ -37,11 +37,47 @@ const plugin = {
     };
 
     const credentials = new KeyVault.KeyVaultCredentials(authenticator);
+
     const client = new KeyVault.KeyVaultClient(credentials);
+
+    const getAll = async function() {
+      const secrets = await client.getSecrets(uri);
+
+      const response = await Promise.all(
+        secrets.map(item => {
+          const secretName = item.id.split("/")[4];
+          return client
+            .getSecretVersions(uri, secretName)
+            .then(function(version) {
+              return client.getSecret(
+                uri,
+                secretName,
+                version[version.length - 1].id.split("/")[5]
+              );
+            });
+        })
+      );
+
+      const keys = response.reduce((acc, item) => {
+        acc[item.id.split("/")[4]] = item.value;
+        return acc;
+      }, {});
+
+      return keys;
+    };
+
+    const secrets = await getAll();
+
+    server.log(
+      "azure-key-vault",
+      `Got secrets for ${Object.keys(secrets).join(" | ")}`
+    );
 
     const expose = {
       get: client.getSecret.bind(client, uri),
-      set: client.setSecret.bind(client, uri)
+      set: client.setSecret.bind(client, uri),
+      getAll,
+      secrets
     };
 
     server.decorate("server", "keyvault", expose);

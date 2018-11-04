@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace InventoryService.Api.Models
@@ -7,5 +8,6 @@ namespace InventoryService.Api.Models
         [Key]
         public string Sku { get; set; }
         public int Quantity { get; set; }
+        public DateTime Modified { get; set; }
     }
 }

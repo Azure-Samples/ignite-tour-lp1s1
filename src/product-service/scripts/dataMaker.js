@@ -31,7 +31,7 @@ const methods = {
 module.exports = function dataMaker(startAt, length) {
   const ans = [];
 
-  for (let i = startAt; i < length; i++) {
+  for (let i = startAt; i <= length; i++) {
     const obj = { id: i };
     Object.keys(methods).forEach(method => {
       obj[method] = methods[method]();

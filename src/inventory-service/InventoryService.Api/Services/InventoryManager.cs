@@ -10,12 +10,19 @@ namespace InventoryService.Api.Services
     public class InventoryManager
     {
         private readonly IInventoryData data;
+        private readonly BadSqlInventoryData badData;
         private readonly IInventoryNotificationService notifications;
 
-        public InventoryManager(IInventoryData data, IInventoryNotificationService notifications)
+        public InventoryManager(IInventoryData data, BadSqlInventoryData badData, IInventoryNotificationService notifications)
         {
             this.data = data;
+            this.badData = badData;
             this.notifications = notifications;
+        }
+
+        public Task<InventoryItem> GetInventoryBySkuBad(string sku)
+        {
+            return badData.GetInventoryBySku(sku);
         }
 
         public async Task<IEnumerable<InventoryItem>> GetInventoryBySkus(IEnumerable<string> skus)
@@ -31,7 +38,7 @@ namespace InventoryService.Api.Services
                     var random = new Random();
                     foreach (var sku in missingSkus)
                     {
-                        var newItem = await data.CreateInventory(sku, random.Next(1, 100));
+                        var newItem = await data.CreateInventory(sku, random.Next(1, 100), DateTime.Now);
                         await notifications.NotifyInventoryChanged(newItem);
                         results.Add(newItem);
                     }

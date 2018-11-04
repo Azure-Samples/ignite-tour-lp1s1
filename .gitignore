@@ -61,5 +61,7 @@ typings/
 .next
 
 .env.production
+.env.development
 .cache/
 dist/
+.vscode

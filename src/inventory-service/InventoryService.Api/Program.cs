@@ -4,8 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using InventoryService.Api.Database;
+using InventoryService.Api.Models;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -20,7 +22,17 @@ namespace InventoryService.Api
             using (var scope = host.Services.CreateScope())
             {
                 var context = scope.ServiceProvider.GetRequiredService<InventoryContext>();
-                context.Database.EnsureCreated();
+                context.Database.Migrate();
+                // make sure there is a user inserted (for SQL injection demo)
+                if (context.SecretUsers.Count() == 0)
+                {
+                    context.SecretUsers.Add(new SecretUser
+                    {
+                        Username = "administrator",
+                        Password = "MySuperSecr3tPassword!"
+                    });
+                    context.SaveChanges();
+                }
             }
             host.Run();
         }

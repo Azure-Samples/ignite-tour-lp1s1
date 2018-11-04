@@ -2,8 +2,13 @@ const Hapi = require("hapi");
 
 // Create a server with a host and port
 const server = Hapi.server({
-  host: "localhost",
-  port: 8000
+  host: process.env.HOSTNAME || "localhost",
+  port: process.env.PORT || 8000,
+  routes: {
+    cors: {
+      origin: [process.env.CORS || "*"]
+    }
+  }
 });
 
 const options = {
@@ -58,6 +63,8 @@ async function start() {
 
   let connectionString;
   if (process.env.KEYVAULT_URI) {
+    server.log("secrets", "pulling secrets from Azure Key Vault");
+
     await server.register({
       plugin: require("./hapi-azure-key-vault"),
       options: {
@@ -66,17 +73,14 @@ async function start() {
         uri: process.env.KEYVAULT_URI
       }
     });
-    const { value: cosmosString } = await server.keyvault.get(
-      "Cosmos-Connection-String",
-      "2c8997e97ed44a50ae0bd117b0d222f9"
-    );
-    connectionString = cosmosString;
-  } else if (process.env.CONNECTION_STRING) {
-    connectionString = `${process.env.CONNECTION_STRING}/${
-      process.env.DB_NAME
-    }`;
+
+    connectionString = server.keyvault.secrets["DB-CONNECTION-STRING"];
+  } else if (process.env.DB_CONNECTION_STRING) {
+    server.log("secrets", "pulling secrets from process.env");
+    connectionString = `${process.env.DB_CONNECTION_STRING}`;
   } else {
-    // undefined connection string defaults to local MongoDB with test db
+    server.log("secrets", "pulling secrets from default");
+    connectionString = "mongodb://localhost:27017/tailwind";
   }
 
   await server.register({

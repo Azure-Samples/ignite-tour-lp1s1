@@ -10,6 +10,7 @@ using NSwag.AspNetCore;
 using NJsonSchema;
 using InventoryService.Api.Hubs;
 using Newtonsoft.Json.Serialization;
+using System.Data.SqlClient;
 
 namespace InventoryService.Api
 {
@@ -17,6 +18,7 @@ namespace InventoryService.Api
     {
         private readonly string signalRServiceConnectionString;
         private readonly bool useSignalRService;
+        private bool isPostgres;
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -33,7 +35,7 @@ namespace InventoryService.Api
             services.AddDbContext<InventoryContext>(options =>
             {
                 var connectionString = Configuration.GetConnectionString("InventoryContext");
-                var isPostgres = connectionString.Contains("postgres");
+                isPostgres = connectionString.Contains("postgres");
                 if (isPostgres)
                 {
                     options.UseNpgsql(connectionString);
@@ -54,6 +56,22 @@ namespace InventoryService.Api
             services.AddScoped<InventoryManager>();
             services.AddScoped<IInventoryData, SqlInventoryData>();
             services.AddScoped<IInventoryNotificationService, SignalRInventoryNotificationService>();
+            services.AddScoped<SqlConnection>(_ =>
+            {
+                if (isPostgres)
+                {
+                    return null;
+                }
+
+                var connectionString = Configuration.GetConnectionString("InventoryContextReadOnly");
+                if (string.IsNullOrEmpty(connectionString))
+                {
+                    connectionString = Configuration.GetConnectionString("InventoryContext");
+                }
+
+                return new SqlConnection(connectionString);
+            });
+            services.AddScoped<BadSqlInventoryData>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
