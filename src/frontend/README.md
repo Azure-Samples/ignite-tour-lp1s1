@@ -33,3 +33,19 @@ INVENTORY_SERVICE_BASE_URL=http://localhost:5000
 ## Debugging
 
 - Parcel (the bundler used here) has a hard time when you change `.env` variables on it. When you change you `.env`, delete the `.cache/` and `dist/` directories and then run a new build.
+
+## Running in Docker
+
+You can build this app super easily with Docker:
+
+```console
+docker build -t twt-fe .
+```
+
+That will build and minimize all assets for you. Then you can run it with:
+
+```console
+docker run --rm -p 8080:8080 twt-fe
+```
+
+Then you can go check it out at `http://localhost:8080`.
