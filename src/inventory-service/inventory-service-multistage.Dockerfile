@@ -8,4 +8,4 @@ RUN cd /home/ \
 FROM microsoft/dotnet:2.2-aspnetcore-runtime AS runtime
 WORKDIR /home/publish/
 COPY --from=builder /home/InventoryService.Api/bin/Release/netcoreapp2.1/publish/ .
-ENTRYPOINT dotnet InventoryService.Api.dll
+ENTRYPOINT dotnet InventoryService.Api.dll --urls http://*:$PORT

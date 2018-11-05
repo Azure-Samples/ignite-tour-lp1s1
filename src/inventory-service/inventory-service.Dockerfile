@@ -9,4 +9,4 @@ RUN cd /home/ \
 
 WORKDIR /home/InventoryService.Api/bin/Release/netcoreapp2.1/publish/
 
-ENTRYPOINT dotnet InventoryService.Api.dll
+ENTRYPOINT dotnet InventoryService.Api.dll --urls http://*:$PORT
