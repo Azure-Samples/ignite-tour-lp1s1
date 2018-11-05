@@ -45,7 +45,8 @@ docker build -t twt-fe .
 That will build and minimize all assets for you. Then you can run it with:
 
 ```console
-docker run --rm -p 8080:8080 twt-fe
+docker run --rm -d -p 8080:8080 -e PRODUCT_SERVICE_BASE_URL=https://product-service-base-url -e INVENTORY_SERVICE_BASE_URL=https://inventory-service-base-url twt-fe
 ```
 
-Then you can go check it out at `http://localhost:8080`.
+Pass in the proper product and inventory service base URLs at startup. Then you can go check it out at `http://localhost:8080`.
+
