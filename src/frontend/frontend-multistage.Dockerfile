@@ -17,4 +17,5 @@ RUN apk add --no-cache curl bash \
     && curl https://getcaddy.com | bash -s personal
 WORKDIR /home/
 COPY --from=builder /home/dist/ .
-ENTRYPOINT caddy -port 1234
+ENTRYPOINT caddy -port 80
+
