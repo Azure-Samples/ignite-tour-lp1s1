@@ -13,11 +13,13 @@ class SqlInfo extends React.Component {
   }
 
   fetchInfo() {
-    return fetch(
-      `${process.env.INVENTORY_SERVICE_BASE_URL}/api/info`
-    )
-    .then(data => data.json())
-    .then(info => this.setState({ info: info }));
+    if (process.env.DISPLAY_SQL_INFO) {
+      fetch(
+        `${process.env.INVENTORY_SERVICE_BASE_URL}/api/info`
+      )
+      .then(data => data.json())
+      .then(info => this.setState({ info: info }));
+    }
   }
   
   render() {
