@@ -7,8 +7,8 @@ import SqlInfo from "./SqlInfo";
 const App = () => (
   <div>
     <Nav />
-    <ProductTable />
     <SqlInfo />
+    <ProductTable />
   </div>
 );
 
