@@ -1,5 +1,7 @@
 # Project Name
 
+[![Build status](https://dev.azure.com/devrel/Ignite-Tour-LP1S1/_apis/build/status/LP1S1%20Build)](https://dev.azure.com/devrel/Ignite-Tour-LP1S1/_build/latest?definitionId=3)
+
 (short, 1-3 sentenced, description of the project)
 
 ## Features
