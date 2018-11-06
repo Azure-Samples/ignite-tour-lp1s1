@@ -26,7 +26,7 @@ nav {
 .table-container {
   position: absolute;
   width: 100vw;
-  top: 80px;
+  top: 70px;
   left: 0;
   right: 0;
   bottom: 0;
@@ -37,6 +37,8 @@ nav {
 .sql-info {
   color: #ffffff;
   text-align: center;
+  font-size: 12px;
+  margin-top: -10px;
 }
 
 @keyframes spin {

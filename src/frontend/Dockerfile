@@ -2,6 +2,7 @@ FROM node:10.12.0-jessie as builder
 
 ENV PRODUCT_SERVICE_BASE_URL '%%PRODUCT_SERVICE_BASE_URL%%'
 ENV INVENTORY_SERVICE_BASE_URL '%%INVENTORY_SERVICE_BASE_URL%%'
+ENV DISPLAY_SQL_INFO '%%DISPLAY_SQL_INFO%%'
 
 RUN mkdir /frontend
 WORKDIR /frontend
@@ -14,6 +15,7 @@ EXPOSE 8080
 ENV PORT 8080
 ENV PRODUCT_SERVICE_BASE_URL http://localhost:8000
 ENV INVENTORY_SERVICE_BASE_URL http://localhost:5000
+ENV DISPLAY_SQL_INFO ""
 
 RUN apk add --no-cache curl bash \
     && curl https://getcaddy.com | bash -s personal \

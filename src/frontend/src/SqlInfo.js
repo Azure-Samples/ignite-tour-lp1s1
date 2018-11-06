@@ -4,7 +4,8 @@ class SqlInfo extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      info: {}
+      info: {},
+      enabled: process.env.DISPLAY_SQL_INFO
     };
   }
 
@@ -13,7 +14,7 @@ class SqlInfo extends React.Component {
   }
 
   fetchInfo() {
-    if (process.env.DISPLAY_SQL_INFO) {
+    if (this.state.enabled) {
       fetch(
         `${process.env.INVENTORY_SERVICE_BASE_URL}/api/info`
       )
@@ -23,8 +24,8 @@ class SqlInfo extends React.Component {
   }
   
   render() {
-    return (process.env.DISPLAY_SQL_INFO) ?
-      <div class="sql-info">{this.state.info.dataSource} | {this.state.info.databaseEdition}</div> :
+    return (this.state.enabled) ?
+      <div className="sql-info">{this.state.info.dataSource} | {this.state.info.databaseEdition}</div> :
       <div></div>;
   }
 }
