@@ -5,4 +5,6 @@ grep -rl '%%PRODUCT_SERVICE_BASE_URL%%' . | xargs sed -i "s/%%PRODUCT_SERVICE_BA
 INVENTORY_SERVICE_BASE_URL=${INVENTORY_SERVICE_BASE_URL//\//\\\/}
 grep -rl '%%INVENTORY_SERVICE_BASE_URL%%' . | xargs sed -i "s/%%INVENTORY_SERVICE_BASE_URL%%/$INVENTORY_SERVICE_BASE_URL/g"
 
+grep -rl '%%DISPLAY_SQL_INFO%%' . | xargs sed -i "s/%%DISPLAY_SQL_INFO%%/$DISPLAY_SQL_INFO/g"
+
 caddy -port $PORT
