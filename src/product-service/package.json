@@ -19,6 +19,7 @@
   "dependencies": {
     "@azure/cosmos": "^2.0.2",
     "adal-node": "^0.1.28",
+    "applicationinsights": "^1.0.6",
     "azure-keyvault": "^3.0.4",
     "dotenv": "^6.1.0",
     "good": "^8.1.1",
