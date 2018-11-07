@@ -7,12 +7,12 @@ const csvParse = require("csv-parse");
 const rf = promisify(readFile);
 const parse = promisify(csvParse);
 
-module.exports = async function seedData({ mongoDbUrl, collectionName }) {
+module.exports = async function seedData({ mongoDbUrl, collectionName, dbName }) {
   const client = await MongoClient.connect(
     mongoDbUrl,
     { useNewUrlParser: true }
     );
-    const db = client.db();
+    const db = client.db(dbName);
     const hasDocs = await db.collection(collectionName).countDocuments();
   if (!hasDocs) {
     console.log("No documents in database. Seeding...")

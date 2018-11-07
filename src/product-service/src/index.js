@@ -63,6 +63,7 @@ async function start() {
   });
 
   let connectionString;
+  let dbName;
   let collectionName;
   let appInsightsKey;
   if (process.env.KEYVAULT_URI) {
@@ -79,6 +80,7 @@ async function start() {
 
     connectionString = server.keyvault.secrets["DB-CONNECTION-STRING"];
     collectionName = server.keyvault.secrets["COLLECTION-NAME"];
+    dbName = server.keyvault.secrets["DB_NAME"];
     appInsightsKey = server.keyvault.secrets["APPINSIGHTS-INSTRUMENTATIONKEY"];
   } else if (process.env.DB_CONNECTION_STRING) {
     server.log("secrets", "pulling secrets from process.env");
@@ -88,6 +90,9 @@ async function start() {
     connectionString = "mongodb://localhost:27017/tailwind";
   }
 
+  dbName = process.env.DB_NAME ||
+    dbName ||
+    "tailwind";
   collectionName = process.env.COLLECTION_NAME ||
     collectionName ||
     "inventory";
@@ -101,7 +106,7 @@ async function start() {
   }
 
   if (process.env.SEED_DATA) {
-    await (require("./seedData")({ mongoDbUrl: connectionString, collectionName }));
+    await (require("./seedData")({ mongoDbUrl: connectionString, collectionName, dbName }));
   }
 
   await server.register({
