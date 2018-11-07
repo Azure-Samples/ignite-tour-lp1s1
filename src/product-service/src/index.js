@@ -63,6 +63,7 @@ async function start() {
   });
 
   let connectionString;
+  let collectionName;
   let appInsightsKey;
   if (process.env.KEYVAULT_URI) {
     server.log("secrets", "pulling secrets from Azure Key Vault");
@@ -77,6 +78,7 @@ async function start() {
     });
 
     connectionString = server.keyvault.secrets["DB-CONNECTION-STRING"];
+    collectionName = server.keyvault.secrets["COLLECTION-NAME"];
     appInsightsKey = server.keyvault.secrets["APPINSIGHTS-INSTRUMENTATIONKEY"];
   } else if (process.env.DB_CONNECTION_STRING) {
     server.log("secrets", "pulling secrets from process.env");
@@ -86,12 +88,20 @@ async function start() {
     connectionString = "mongodb://localhost:27017/tailwind";
   }
 
+  collectionName = process.env.COLLECTION_NAME ||
+    collectionName ||
+    "inventory";
+
   appInsightsKey = process.env.APPINSIGHTS_INSTRUMENTATIONKEY || appInsightsKey;
   if (appInsightsKey) {
     appInsights.setup(appInsightsKey);
     appInsights.defaultClient.context.tags[appInsights.defaultClient.context.keys.cloudRole] = "product-service";
     appInsights.start();
     server.log("Application Insights started with key " + appInsightsKey);
+  }
+
+  if (process.env.SEED_DATA) {
+    await (require("./seedData")({ mongoDbUrl: connectionString, collectionName }));
   }
 
   await server.register({
