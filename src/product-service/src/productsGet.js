@@ -5,7 +5,7 @@ module.exports = async function getInventoryList(req) {
 
   const collection =
     process.env.COLLECTION_NAME ||
-    req.keyvault.secrets["COLLECTION-NAME"] ||
+    (req.keyvault && req.keyvault.secrets && req.keyvault.secrets["COLLECTION-NAME"]) ||
     "inventory";
   try {
     [items, size] = await Promise.all([
