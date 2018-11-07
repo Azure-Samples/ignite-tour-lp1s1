@@ -14,6 +14,8 @@ This project requires Node.js 8+ to build. It won't work well without the produc
 PRODUCT_SERVICE_BASE_URL=http://localhost:8000
 INVENTORY_SERVICE_BASE_URL=http://localhost:5000
 ```
+1. (Optional) Set `APPINSIGHTS_INSTRUMENTATIONKEY` with Applications Insights key (enables Application Insights)
+1. (Optional) Set `DISPLAY_SQL_INFO`=`true` to display SQL Server information from Inventory Service. **Leave empty if you don't want to show this.**
 
 ## To Develop
 
