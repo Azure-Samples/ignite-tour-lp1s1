@@ -58,8 +58,12 @@ class ProductTable extends React.Component {
     //   this.fetchRows(Math.ceil(this.state.rows.length / 500));
     // }
 
-    const nums = Array.from({ length: this.state.stop - this.state.start })
-      .map((_, index) => this.state.rows[index + this.state.start].id)
+    const nums = Array.from({ length: this.state.stop - this.state.start + 1 })
+      .map((_, index) => {
+        const i = index + this.state.start;
+        // attempt to fix off by one error
+        return (this.state.rows[i] && this.state.rows[i].id) || 0;
+      })
       .join(",");
     fetch(
       `${process.env.INVENTORY_SERVICE_BASE_URL}/api/inventory?skus=${nums}`
