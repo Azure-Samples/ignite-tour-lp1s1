@@ -13,7 +13,7 @@ module.exports = async function seedData({ mongoDbUrl, collectionName, dbName })
     { useNewUrlParser: true }
     );
     const db = client.db(dbName);
-    const hasDocs = await db.collection(collectionName).countDocuments();
+    const hasDocs = await db.collection(collectionName).find().count();
   if (!hasDocs) {
     console.log("No documents in database. Seeding...")
     const csvData = await rf(path.resolve(__dirname, "../scripts/products.csv"));
