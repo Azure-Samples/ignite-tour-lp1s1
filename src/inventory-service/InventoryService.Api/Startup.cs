@@ -11,6 +11,7 @@ using NJsonSchema;
 using InventoryService.Api.Hubs;
 using Newtonsoft.Json.Serialization;
 using System.Data.SqlClient;
+using Microsoft.AspNetCore.Http;
 
 namespace InventoryService.Api
 {
@@ -99,6 +100,11 @@ namespace InventoryService.Api
 
             app.UseMvc();
             app.UseFileServer("/www");
+            app.Run(async context =>
+            {
+                // return 200 at the root for healthchecks
+                await context.Response.WriteAsync("Inventory Service");
+            });
         }
     }
 }
