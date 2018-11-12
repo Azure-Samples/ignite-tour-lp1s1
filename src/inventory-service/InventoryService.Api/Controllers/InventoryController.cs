@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using InventoryService.Api.Models;
 using InventoryService.Api.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace InventoryService.Api.Controllers
 {
@@ -13,10 +14,12 @@ namespace InventoryService.Api.Controllers
     public class InventoryController : ControllerBase
     {
         private readonly InventoryManager inventoryManager;
+        private readonly ILogger<InventoryController> logger;
 
-        public InventoryController(InventoryManager inventoryManager)
+        public InventoryController(InventoryManager inventoryManager, ILogger<InventoryController> logger)
         {
             this.inventoryManager = inventoryManager ?? throw new ArgumentNullException(nameof(inventoryManager));
+            this.logger = logger;
         }
 
         /// <summary>
@@ -32,6 +35,10 @@ namespace InventoryService.Api.Controllers
             if (!string.IsNullOrEmpty(skus))
             {
                 var splitSkus = skus.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                foreach(var sku in splitSkus)
+                {
+                    logger.LogInformation(new EventId(0, "GetSkuMultiple"), "Getting sku {sku}", sku);
+                }
                 return await inventoryManager.GetInventoryBySkus(splitSkus);
             }
             else
@@ -50,6 +57,7 @@ namespace InventoryService.Api.Controllers
         [HttpGet("bad/{sku}")]
         public async Task<IActionResult> GetSingleBadAsync(string sku)
         {
+            logger.LogInformation(new EventId(2, "GetSkuSingleBad"), "Getting sku {sku}", sku);
             var result = await inventoryManager.GetInventoryBySkuBad(sku);
             if (result != null)
             {
@@ -71,6 +79,7 @@ namespace InventoryService.Api.Controllers
         [HttpGet("{sku}")]
         public async Task<InventoryItem> GetSingleAsync(string sku)
         {
+            logger.LogInformation(new EventId(1, "GetSkuSingle"), "Getting sku {sku}", sku);
             return (await inventoryManager.GetInventoryBySkus(new string[] { sku })).FirstOrDefault();
         }
 
@@ -82,9 +91,11 @@ namespace InventoryService.Api.Controllers
         /// </returns>
         /// <param name="sku">The product SKU.</param>
         [HttpPost("{sku}/increment")]
-        public Task<InventoryItem> IncrementAsync(string sku)
+        public async Task<InventoryItem> IncrementAsync(string sku)
         {
-            return inventoryManager.IncrementInventory(sku);
+            var result = await inventoryManager.IncrementInventory(sku);
+            logger.LogInformation(new EventId(3, "Increment"), "Incrementing sku {sku}. New value {newValue}", sku, result.Quantity);
+            return result;
         }
 
         /// <summary>
@@ -95,9 +106,11 @@ namespace InventoryService.Api.Controllers
         /// </returns>
         /// <param name="sku">The product SKU.</param> 
         [HttpPost("{sku}/decrement")]
-        public Task<InventoryItem> DecrementAsync(string sku)
+        public async Task<InventoryItem> DecrementAsync(string sku)
         {
-            return inventoryManager.DecrementInventory(sku);
+            var result = await inventoryManager.DecrementInventory(sku);
+            logger.LogInformation(new EventId(4, "Decrement"), "Decrementing sku {sku}. New value {newValue}", sku, result.Quantity);
+            return result;
         }
     }
 }

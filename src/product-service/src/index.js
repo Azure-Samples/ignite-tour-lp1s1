@@ -1,4 +1,5 @@
 const Hapi = require("hapi");
+const appInsights = require("applicationinsights");
 
 // Create a server with a host and port
 const server = Hapi.server({
@@ -62,6 +63,9 @@ async function start() {
   });
 
   let connectionString;
+  let dbName;
+  let collectionName;
+  let appInsightsKey;
   if (process.env.KEYVAULT_URI) {
     server.log("secrets", "pulling secrets from Azure Key Vault");
 
@@ -75,12 +79,34 @@ async function start() {
     });
 
     connectionString = server.keyvault.secrets["DB-CONNECTION-STRING"];
+    collectionName = server.keyvault.secrets["COLLECTION-NAME"];
+    dbName = server.keyvault.secrets["DB_NAME"];
+    appInsightsKey = server.keyvault.secrets["APPINSIGHTS-INSTRUMENTATIONKEY"];
   } else if (process.env.DB_CONNECTION_STRING) {
     server.log("secrets", "pulling secrets from process.env");
     connectionString = `${process.env.DB_CONNECTION_STRING}`;
   } else {
     server.log("secrets", "pulling secrets from default");
     connectionString = "mongodb://localhost:27017/tailwind";
+  }
+
+  dbName = process.env.DB_NAME ||
+    dbName ||
+    "tailwind";
+  collectionName = process.env.COLLECTION_NAME ||
+    collectionName ||
+    "inventory";
+
+  appInsightsKey = process.env.APPINSIGHTS_INSTRUMENTATIONKEY || appInsightsKey;
+  if (appInsightsKey) {
+    appInsights.setup(appInsightsKey);
+    appInsights.defaultClient.context.tags[appInsights.defaultClient.context.keys.cloudRole] = "product-service";
+    appInsights.start();
+    server.log("Application Insights started with key " + appInsightsKey);
+  }
+
+  if (process.env.SEED_DATA) {
+    await (require("./seedData")({ mongoDbUrl: connectionString, collectionName, dbName }));
   }
 
   await server.register({

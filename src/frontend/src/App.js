@@ -3,11 +3,16 @@ import { render } from "react-dom";
 import Nav from "./Nav";
 import ProductTable from "./ProductTable";
 import Timings from "./Timings";
+import SqlInfo from "./SqlInfo";
+
+const instrumentationKey = process.env.APPINSIGHTS_INSTRUMENTATIONKEY;
+if (instrumentationKey) {
+  import("./app-insights");
+}
 
 class App extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
       productsTiming: -1,
       inventoryTiming: -1
@@ -37,6 +42,7 @@ class App extends React.Component {
       <div>
         <Nav />
         <ProductTable setTiming={this.setTiming} />
+        <SqlInfo />
         <Timings
           productsTiming={this.state.productsTiming}
           inventoryTiming={this.state.inventoryTiming}

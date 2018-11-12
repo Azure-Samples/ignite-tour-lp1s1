@@ -59,8 +59,12 @@ class ProductTable extends React.Component {
       return;
     }
 
-    const nums = Array.from({ length: this.state.stop - this.state.start })
-      .map((_, index) => index + this.state.start + 1)
+    const nums = Array.from({ length: this.state.stop - this.state.start + 1 })
+      .map((_, index) => {
+        const i = index + this.state.start;
+        // attempt to fix off by one error
+        return (this.state.rows[i] && this.state.rows[i].id) || 0;
+      })
       .join(",");
     const start = Date.now();
     fetch(
@@ -71,11 +75,12 @@ class ProductTable extends React.Component {
         return data.json();
       })
       .then(skus => {
-        for (let i = 0; i < skus.length; i++) {
-          this.props.setTiming(Date.now() - start);
-          // cloning a list of 100,000 is bad
-          this.state.rows[+skus[i].sku - 1].inventory = skus[i].quantity; // eslint-disable-line
-        }
+        skus.forEach(sku => {
+          const item = this.state.rows.find(p => p.id == sku.sku);
+          if (item) {
+            item.inventory = sku.quantity;
+          }
+        });
 
         this.forceUpdate();
         this.interval = Date.now() + 5000;

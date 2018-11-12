@@ -13,6 +13,7 @@ This project requires Node.js 8+ as well CosmosDB or MongoDB running somewhere.
    - `PORT` — What port to start the service on. default `8000` – don't add this to your .env unless you _definitely_ need it
    - `HOSTNAME` — What hostname the server is hosted on. default: `localhost` – don't add this to your .env unless you _definitely_ need it
    - `CORS` - Which URL would you like to restrict CORS to? By default it is set to '\*'.
+   - `APPINSIGHTS_INSTRUMENTATIONKEY` - Applications Insights key (enables Application Insights)
 
 **OR**
 
@@ -24,11 +25,16 @@ This project requires Node.js 8+ as well CosmosDB or MongoDB running somewhere.
    
 ## To Populate ComsosDB or MongoDB with fake data
 
+### Randomly generate large quantities of products
 1. `cd` to this directory, `<project>/src/product-service/`
 1. `npm install`
 1. If you need to pull from a Postgres DB, make sure you have a connection string for it in your `.env`
 1. Drop the previous collection if you're re-using a collection
 1. Run `npm run populate:mongodb`
+
+### Seed database with "official" Tailwind products
+1. Set `SEED_DATA` = `true`, `DB_CONNECTION_STRING` = valid connection string
+1. `npm start` to run the app.
 
 ## To Develop
 
