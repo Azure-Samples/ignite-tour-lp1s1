@@ -27,7 +27,7 @@ Server=tailwind32671.postgres.database.azure.com;Database=Tailwind;Port=5432;Use
 - REST API docs can be accessed using Swagger UI: `/swagger`
 - Get real-time inventory updates, see SignalR test page: `/www`
 
-Optional: Use Azure SignalR Service by adding another secret (local dev only, use environment variable everywhere):
+Optional: Use Azure SignalR Service by adding another secret (local dev only, use environment variable everywhere else):
 
 ```
 dotnet user-secrets set 'SignalRServiceConnectionString' '<azure-signalr-connection-string>'
