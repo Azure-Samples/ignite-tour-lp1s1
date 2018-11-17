@@ -1,11 +1,22 @@
 # Inventory Service
 
-This project needs an instance of SQL Server, SQL Database, or PostgreSQL. Create a user secret in InventoryService.Api project and run the app:
+This project needs an instance of SQL Server, SQL Database, or PostgreSQL.
+
+## Local dev
+
+Create a user secret in InventoryService.Api project and run the app:
 
 ```
 dotnet user-secrets set 'ConnectionStrings:InventoryContext' '<sqldb-connection-string>'
 dotnet run
 ```
+
+## Running in the cloud or in containers
+
+Set an environment variable named `ConnectionStrings__InventoryContext`.
+
+(Or use Azure Key Vault (below))
+
 
 #### Example Connection String
 
@@ -16,11 +27,18 @@ Server=tailwind32671.postgres.database.azure.com;Database=Tailwind;Port=5432;Use
 - REST API docs can be accessed using Swagger UI: `/swagger`
 - Get real-time inventory updates, see SignalR test page: `/www`
 
-Optional: Use Azure SignalR Service by adding another secret:
+Optional: Use Azure SignalR Service by adding another secret (local dev only, use environment variable everywhere):
 
 ```
 dotnet user-secrets set 'SignalRServiceConnectionString' '<azure-signalr-connection-string>'
 ```
+
+## Key Vault
+
+Set 2 environment variables:
+* `AzureServicesAuthConnectionString` = `RunAs=App;AppId={AppId};TenantId={TenantId};AppKey={ClientSecret}`
+* `KeyVaultEndpoint` = `https://{keyvaultname}.vault.azure.net/`
+
 
 ## Build the Docker Image
 
