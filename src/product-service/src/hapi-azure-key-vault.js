@@ -44,18 +44,9 @@ const plugin = {
       const secrets = await client.getSecrets(uri);
 
       const response = await Promise.all(
-        secrets.map(item => {
-          const secretName = item.id.split("/")[4];
-          return client
-            .getSecretVersions(uri, secretName)
-            .then(function(version) {
-              return client.getSecret(
-                uri,
-                secretName,
-                version[version.length - 1].id.split("/")[5]
-              );
-            });
-        })
+        secrets
+          .filter(item => item.attributes && item.attributes.enabled)
+          .map(item => client.getSecret(uri, item.id.split("/")[4], ""))
       );
 
       const keys = response.reduce((acc, item) => {
