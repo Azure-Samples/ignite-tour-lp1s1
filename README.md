@@ -1,59 +1,53 @@
-# Project Name
+# DEV10: Designing Resilient Cloud Applications
 
 [![Build status](https://dev.azure.com/devrel/Ignite-Tour-LP1S1/_apis/build/status/LP1S1%20Build)](https://dev.azure.com/devrel/Ignite-Tour-LP1S1/_build/latest?definitionId=3)
 
-(short, 1-3 sentenced, description of the project)
+This session introduces Tailwind Traders and the application that you'll see in other demos in this tour. You'll also learn about how to build resilient cloud applications at global scale that will withstand failures in sections.
 
-## Features
+## Source code
 
-This project framework provides the following features:
+This repo contains these parts of the Tailwind Traders application. 
 
-* Feature 1
-* Feature 2
-* ...
+* Frontend
+* Product Service
+* Inventory Service
+* Report Service
 
-## Getting Started
-
-### Prerequisites
-
-(ideally very short, if any)
-
-- OS
-- Library version
-- ...
-
-### Installation
-
-(ideally very short)
-
-- npm install [package name]
-- mvn install
-- ...
-
-### Quickstart
-(Add steps to get up and running quickly)
-
-1. git clone [repository clone url]
-2. cd [respository name]
-3. ...
+> This is the most up to date version of these services. Other sessions may use this code directly or its derivatives.
 
 
-## Demo
+## Services Used
 
-A demo app is included to show how to use the project.
+* Azure App Service - Web App for Containers
+* Azure Key Vault
+* Azure SQL Database, Azure Database for PostgreSQL
+* Azure Cosmos DB
+* Azure Front Door
+* Azure Container Registry
 
-To run the demo, follow these steps:
+  
+## Deployment
 
-(Add steps to start up the demo)
+### Main resources
 
-1.
-2.
-3.
+There is an automated script that will deploy a resource group, plus the Frontend, and Inventory and Product services.
 
-## Resources
+#### Prerequisites
 
-(Any additional resources or related projects)
+* Azure CLI (logged in and subscription selected)
+* Bash (if in WSL, ensure files do not have Windows line endings)
 
-- Link to supporting information
-- Link to similar sample
-- ...
+#### Deployment
+
+Change into the `deployment` directory and run `deploy.sh`.
+
+### Azure Front Door
+
+The Azure Front Door portion of the deployment is currently not automated, although the app may be created in additional regions using the above automated script that will serve as multiple backends for the Azure Front Door deployment.
+
+
+## Learn More / Resources
+
+...
+
+
