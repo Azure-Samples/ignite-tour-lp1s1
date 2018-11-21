@@ -41,13 +41,22 @@ There is an automated script that will deploy a resource group, plus the Fronten
 
 Change into the `deployment` directory and run `deploy.sh`.
 
-### Azure Front Door
+
+### Additional resources
+
+#### Azure Front Door
 
 The Azure Front Door portion of the deployment is currently not automated, although the app may be created in additional regions using the above automated script that will serve as multiple backends for the Azure Front Door deployment.
+
+#### Azure Key Vault
+
+Both the Product and Inventory services can pull their secrets from Azure Key Vault. See the READMEs ([Product Service](src/product-service/README.md), [Inventory Service](src/inventory-service/README.md)).
 
 
 ## Learn More / Resources
 
-...
-
-
+* [Distribute your data globally with Azure Cosmos DB](https://docs.microsoft.com/learn/modules/distribute-data-globally-with-cosmos-db/?WT.mc_id=MSIgniteTheTour-github-dev10) (Microsoft Learn)
+* [Build and store container images with Azure Container Registry](https://docs.microsoft.com/learn/modules/build-and-store-container-images/?WT.mc_id=MSIgniteTheTour-github-dev1) (Microsoft Learn)
+* [Host a web application with Azure App service](https://docs.microsoft.com/learn/modules/host-a-web-app-with-azure-app-service/?WT.mc_id=MSIgniteTheTour-github-dev1) (Microsoft Learn)
+* [Provision an Azure SQL database to store application data](https://docs.microsoft.com/learn/modules/provision-azure-sql-db/?WT.mc_id=MSIgniteTheTour-github-dev1) (Microsoft Learn)
+* [Azure Front Door](https://docs.microsoft.com/azure/frontdoor/?WT.mc_id=MSIgniteTheTour-github-dev1) (Microsoft Docs)
