@@ -19,7 +19,7 @@ class SkuRequestor extends React.Component {
   }
   request(sku) {
     this.setState({ loading: true });
-    fetch(`${process.env.SKU_SERVICE_BASE_URL}//api/inventory/bad/${sku}`)
+    fetch(`${process.env.SKU_SERVICE_BASE_URL}/api/inventory/bad/${sku}`)
       .then(data => data.json())
       .then(res => {
         this.setState({ res, loading: false });
@@ -40,11 +40,17 @@ class SkuRequestor extends React.Component {
         </form>
         {this.state.loading ? <span className="sku-loading">🛠</span> : null}
         {this.state.res ? (
+          <div>
           <pre>
             <code>{JSON.stringify(this.state.res, null, 4)}</code>
           </pre>
+          <h3>Injection Sample Code</h3>
+          <pre>
+            <code>' UNION SELECT Password AS Sku, 0 AS Quantity FROM SecretUsers WHERE Username = 'administrator' --</code>
+          </pre>
+          </div>
         ) : null}
-      </div>
+      </div> 
     );
   }
 }

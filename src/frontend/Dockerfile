@@ -2,6 +2,7 @@ FROM node:10.12.0-jessie as builder
 
 ENV PRODUCT_SERVICE_BASE_URL '%%PRODUCT_SERVICE_BASE_URL%%'
 ENV INVENTORY_SERVICE_BASE_URL '%%INVENTORY_SERVICE_BASE_URL%%'
+ENV SKU_SERVICE_BASE_URL '%%INVENTORY_SERVICE_BASE_URL%%'
 ENV DISPLAY_SQL_INFO '%%DISPLAY_SQL_INFO%%'
 ENV APPINSIGHTS_INSTRUMENTATIONKEY '%%APPINSIGHTS_INSTRUMENTATIONKEY%%'
 
@@ -25,5 +26,6 @@ RUN apk add --no-cache curl bash \
 WORKDIR /app/
 COPY --from=builder /frontend/dist/ ./dist/
 COPY --from=builder /frontend/docker-startup.sh .
+COPY --from=builder /frontend/Caddyfile .
 
 CMD ./docker-startup.sh
