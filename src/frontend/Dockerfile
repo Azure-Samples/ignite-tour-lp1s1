@@ -25,5 +25,6 @@ RUN apk add --no-cache curl bash \
 WORKDIR /app/
 COPY --from=builder /frontend/dist/ ./dist/
 COPY --from=builder /frontend/docker-startup.sh .
+COPY --from=builder /frontend/Caddyfile .
 
 CMD ./docker-startup.sh
