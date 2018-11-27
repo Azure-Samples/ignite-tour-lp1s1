@@ -57,8 +57,14 @@ nav {
 }
 
 .ReactVirtualized__Table__rowColumn:empty,
-.inventory:empty {
+.inventory:empty,
+.sku-loading {
   animation: 3s linear spin infinite;
+}
+
+.sku-loading {
+  font-size: 50px;
+  display: inline-block;
 }
 
 .row-even {
@@ -219,4 +225,33 @@ nav {
   background-color: #4c6d58;
   color: white;
   font-weight: bold;
+}
+
+.sku {
+  background-color: white;
+  max-width: 900px;
+  margin: 15px auto;
+  padding: 20px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.sku input {
+  width: 100%;
+  font-size: 20px;
+  padding: 5px;
+  border: 3px #ccc solid;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.sku input:focus {
+  border-color: #36556f;
+}
+
+pre {
+  background-color: #ccc;
+  text-align: left;
+  padding: 20px;
+  border-radius: 5px;
 }

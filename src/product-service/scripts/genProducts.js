@@ -16,6 +16,7 @@ const dbName = process.env.DB_NAME || "tailwind";
 const collectionName = process.env.COLLECTION_NAME || "inventory";
 const numberOfItems = process.env.ITEMS_AMOUNT || 10000;
 const imageSize = process.env.IMAGE_SIZE || 250;
+const sectionLength = process.env.SECTION_LENGTH || 10000;
 
 const processImage = image => ({
   id: image.id,
@@ -110,7 +111,7 @@ async function insert() {
   console.log("starting MongoDB");
   console.log(
     `local: ${url ===
-      "mongodb://localhost:27017"} | db: ${dbName} | collection: ${collectionName} | number of items: ${numberOfItems}`
+      "mongodb://localhost:27017"} | db: ${dbName} | collection: ${collectionName} | number of items: ${numberOfItems} | section lengths: ${sectionLength}`
   );
   const client = await MongoClient.connect(
     url,
@@ -118,9 +119,25 @@ async function insert() {
   );
   const db = client.db(dbName);
 
-  const res = await db.collection(collectionName).insertMany(items);
+  console.log("starting mongoDB inserts");
 
-  console.log(`finished insert, inserted ${res.insertedCount} items`);
+  const responses = [];
+  for (let i = 0; i < Math.floor(items.length / sectionLength); i++) {
+    const cur = items.slice(i * sectionLength, (i + 1) * sectionLength);
+    const res = await db.collection(collectionName).insertMany(cur);
+    console.log(`iteration ${i} | inserted ${res.insertedCount}`);
+    responses.push(res);
+  }
+
+  const count = responses
+    .map(({ insertedCount }) => insertedCount)
+    .reduce((acc, item) => item + acc);
+
+  console.log(
+    `finished insert, inserted ${count} items over ${
+      responses.length
+    } iterations`
+  );
 
   await client.close();
 
