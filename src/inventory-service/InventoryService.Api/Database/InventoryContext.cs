@@ -12,5 +12,6 @@ namespace InventoryService.Api.Database
 
         public DbSet<InventoryItem> Inventory { get; set; }
         public DbSet<SecretUser> SecretUsers { get; set; }
+        public DbSet<Payroll> Payroll { get; set; }
     }
 }

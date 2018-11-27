@@ -50,6 +50,23 @@ namespace InventoryService.Api
                     });
                     context.SaveChanges();
                 }
+                if (context.Payroll.Count() == 0)
+                {
+                    context.Payroll.AddRange(
+                        new Payroll
+                        {
+                            EmployeeName = "Nancy Daviolo",
+                            Title = "Executive Vice President of Operations",
+                            Salary = 150000
+                        },
+                        new Payroll
+                        {
+                            EmployeeName = "Margaret Peacock",
+                            Title = "President",
+                            Salary = 135000
+                        });
+                    context.SaveChanges();
+                }
             }
             host.Run();
         }
