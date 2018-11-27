@@ -13,7 +13,7 @@ FROM microsoft/dotnet:2.1-runtime-deps-alpine
 WORKDIR /app
 COPY --from=builder /app .
 
-ENV PORT 80
 EXPOSE 80
+ENV PORT 80
 
-ENTRYPOINT ./InventoryService.Api
+ENTRYPOINT ["sh", "-c", "./InventoryService.Api --urls=http://*:$PORT"]
