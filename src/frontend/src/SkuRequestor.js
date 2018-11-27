@@ -19,7 +19,7 @@ class SkuRequestor extends React.Component {
   }
   request(sku) {
     this.setState({ loading: true });
-    fetch(`${process.env.SKU_SERVICE_BASE_URL}//api/inventory/bad/${sku}`)
+    fetch(`${process.env.SKU_SERVICE_BASE_URL}/api/inventory/bad/${sku}`)
       .then(data => data.json())
       .then(res => {
         this.setState({ res, loading: false });
