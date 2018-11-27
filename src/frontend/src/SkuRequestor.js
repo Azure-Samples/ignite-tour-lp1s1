@@ -50,7 +50,7 @@ class SkuRequestor extends React.Component {
           </pre>
           </div>
         ) : null}
-      </div>
+      </div> 
     );
   }
 }
