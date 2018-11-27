@@ -29,6 +29,8 @@ spec:
             value: "{{ .Values.externalServices.inventory }}"
           - name: PRODUCT_SERVICE_BASE_URL
             value: "{{ .Values.externalServices.product }}"
+          - name: DISPLAY_SQL_INFO
+            value: "{{ .Values.displaySqlInfo }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
