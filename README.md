@@ -1,6 +1,6 @@
 # DEV10: Designing Resilient Cloud Applications
 
-[![Build status](https://dev.azure.com/devrel/Ignite-Tour-LP1S1/_apis/build/status/LP1S1%20Build)](https://dev.azure.com/devrel/Ignite-Tour-LP1S1/_build/latest?definitionId=3)
+![Build status](https://dev.azure.com/devrel/Ignite-Tour-LP1S1/_apis/build/status/LP1S1%20Build))
 
 This session introduces Tailwind Traders and the application that you'll see in other demos in this tour. You'll also learn about how to build resilient cloud applications at global scale that will withstand failures in sections.
 
@@ -55,8 +55,8 @@ Both the Product and Inventory services can pull their secrets from Azure Key Va
 
 ## Learn More / Resources
 
-* [Distribute your data globally with Azure Cosmos DB](https://docs.microsoft.com/learn/modules/distribute-data-globally-with-cosmos-db/?WT.mc_id=MSIgniteTheTour-github-dev10) (Microsoft Learn)
-* [Build and store container images with Azure Container Registry](https://docs.microsoft.com/learn/modules/build-and-store-container-images/?WT.mc_id=MSIgniteTheTour-github-dev1) (Microsoft Learn)
-* [Host a web application with Azure App service](https://docs.microsoft.com/learn/modules/host-a-web-app-with-azure-app-service/?WT.mc_id=MSIgniteTheTour-github-dev1) (Microsoft Learn)
-* [Provision an Azure SQL database to store application data](https://docs.microsoft.com/learn/modules/provision-azure-sql-db/?WT.mc_id=MSIgniteTheTour-github-dev1) (Microsoft Learn)
-* [Azure Front Door](https://docs.microsoft.com/azure/frontdoor/?WT.mc_id=MSIgniteTheTour-github-dev1) (Microsoft Docs)
+* [Distribute your data globally with Azure Cosmos DB](https://docs.microsoft.com/learn/modules/distribute-data-globally-with-cosmos-db/?WT.mc_id=msignitethetour-github-dev10) (Microsoft Learn)
+* [Build and store container images with Azure Container Registry](https://docs.microsoft.com/learn/modules/build-and-store-container-images/?WT.mc_id=msignitethetour-github-dev1) (Microsoft Learn)
+* [Host a web application with Azure App service](https://docs.microsoft.com/learn/modules/host-a-web-app-with-azure-app-service/?WT.mc_id=msignitethetour-github-dev1) (Microsoft Learn)
+* [Provision an Azure SQL database to store application data](https://docs.microsoft.com/learn/modules/provision-azure-sql-db/?WT.mc_id=msignitethetour-github-dev1) (Microsoft Learn)
+* [Azure Front Door](https://docs.microsoft.com/azure/frontdoor/?WT.mc_id=msignitethetour-github-dev1) (Microsoft Docs)
