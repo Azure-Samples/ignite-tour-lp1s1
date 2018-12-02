@@ -55,7 +55,7 @@ You can swap out `inventory-service` for your own image name.
 Or you can use [Azure Container Registry Builds](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-tutorial-quick-task) to do it:
 
 ```console
-az acr build -r ignite-registry -t inventory-service .
+az acr build -r my-registry -t inventory-service .
 ```
 
 A few notes about this:
