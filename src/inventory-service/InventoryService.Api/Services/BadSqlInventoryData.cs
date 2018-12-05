@@ -18,6 +18,7 @@ namespace InventoryService.Api.Services
             InventoryItem result = null;
             await connection.OpenAsync();
 
+
             var sql = $"SELECT Sku, Quantity FROM Inventory WHERE Sku = @Sku";
             using (var command = new SqlCommand(sql, connection))
             {
