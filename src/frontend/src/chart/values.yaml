@@ -54,3 +54,4 @@ tolerations: []
 affinity: {}
 
 displaySqlInfo: ""
+customTitle: "TAILWIND TRADERS"
