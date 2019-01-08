@@ -13,7 +13,6 @@
       "apiKey": "SENDGRID_API_KEY",
       "to": "%RECIPIENT_EMAIL%",
       "from": "%SENDER_EMAIL%",
-      "subject": "Tailwind Modified SKUs Report",
       "direction": "out"
     }
   ]
