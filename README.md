@@ -6,7 +6,7 @@ This session introduces Tailwind Traders and the application that you'll see in 
 
 ## Source code
 
-This repo contains these parts of the Tailwind Traders application. 
+This repo contains these parts of the Tailwind Traders application.
 
 * Frontend
 * Product Service
@@ -25,28 +25,20 @@ This repo contains these parts of the Tailwind Traders application.
 * Azure Front Door
 * Azure Container Registry
 
-  
+
 ## Deployment
 
-### Main resources
+An Azure Resource Manager template + a bootstrap script can be used to deploy the assets for this session. Click on the Deploy to Azure button to create the artifacts in your Azure subscription.
 
-There is an automated script that will deploy a resource group, plus the Frontend, and Inventory and Product services.
-
-#### Prerequisites
-
-* Azure CLI (logged in and subscription selected)
-* Bash (if in WSL, ensure files do not have Windows line endings)
-
-#### Deployment
-
-Change into the `deployment` directory and run `deploy.sh`.
-
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fneilpeterson%2Fitt-tooling-notes%2Fmaster%2Fresource-manager-template-aci-bootstrap%2Ftemplate%2Fazuredeploy.json" target="_blank">
+    <img src="http://azuredeploy.net/deploybutton.png"/>
+</a>
 
 ## Train the Trainer content
 
 ### Session Abstract
 
-Building a resilient application means leaning on the distributed nature of the cloud. In this talk, we’ll show you how Tailwind Traders reduced single point of failure by deploying backend services to multiple regions using Azure App Service and Azure Traffic Manager. We’ll then create a CDN using Azure Blob Storage to deliver static assets such as images and frontend code. Finally, we’ll deploy our data with full geo-redundancy using Cosmos DB and Azure SQL Database. 
+Building a resilient application means leaning on the distributed nature of the cloud. In this talk, we’ll show you how Tailwind Traders reduced single point of failure by deploying backend services to multiple regions using Azure App Service and Azure Traffic Manager. We’ll then create a CDN using Azure Blob Storage to deliver static assets such as images and frontend code. Finally, we’ll deploy our data with full geo-redundancy using Cosmos DB and Azure SQL Database.
 
 Once we’ve set everything up, we’ll test it out and see how our application handles, and recovers from, catastrophic failure.
 
