@@ -37,7 +37,7 @@ dotnet user-secrets set 'SignalRServiceConnectionString' '<azure-signalr-connect
 
 Set 2 environment variables:
 * `AzureServicesAuthConnectionString` = `RunAs=App;AppId={AppId};TenantId={TenantId};AppKey={ClientSecret}`
-* `KeyVaultUrl` = `https://{keyvaultname}.vault.azure.net/`
+* `KeyVaultEndpoint` = `https://{keyvaultname}.vault.azure.net/`
 
 
 ## Build the Docker Image
