@@ -27,7 +27,6 @@ namespace InventoryService.Api
                     var keyVaultUrl = config["KeyVaultUrl"];
                     if (!string.IsNullOrEmpty(keyVaultUrl))
                     {
-                        var secretClient = new SecretClient(new Uri(keyVaultUrl), new DefaultAzureCredential());
 
                         builder.AddAzureKeyVault(new Uri(keyVaultUrl), new DefaultAzureCredential());
                     }
