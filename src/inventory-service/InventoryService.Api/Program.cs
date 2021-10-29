@@ -1,14 +1,14 @@
-﻿using System.Linq;
+﻿using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
 using InventoryService.Api.Database;
 using InventoryService.Api.Models;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Azure.KeyVault;
-using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.AzureKeyVault;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Linq;
 
 namespace InventoryService.Api
 {
@@ -24,15 +24,11 @@ namespace InventoryService.Api
             var host = CreateWebHostBuilder(args)
                 .ConfigureAppConfiguration((ctx, builder) =>
                 {
-                    var keyVaultEndpoint = config["KeyVaultEndpoint"];
-                    if (!string.IsNullOrEmpty(keyVaultEndpoint))
+                    var keyVaultUrl = config["KeyVaultUrl"];
+                    if (!string.IsNullOrEmpty(keyVaultUrl))
                     {
-                        var azureServiceTokenProvider = new AzureServiceTokenProvider();
-                        var keyVaultClient = new KeyVaultClient(
-                            new KeyVaultClient.AuthenticationCallback(
-                                azureServiceTokenProvider.KeyVaultTokenCallback));
-                        builder.AddAzureKeyVault(
-                            keyVaultEndpoint, keyVaultClient, new DefaultKeyVaultSecretManager());
+
+                        builder.AddAzureKeyVault(new Uri(keyVaultUrl), new DefaultAzureCredential());
                     }
                 }).Build();
 
